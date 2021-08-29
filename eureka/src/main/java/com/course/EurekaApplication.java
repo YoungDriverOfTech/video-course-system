@@ -1,13 +1,13 @@
-package com.course.couse;
+package com.course;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CouseApplication {
+public class EurekaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CouseApplication.class, args);
+		SpringApplication.run(EurekaApplication.class, args);
 	}
 
 }
