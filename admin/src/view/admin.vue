@@ -21,7 +21,7 @@
           <a href="index.html" class="navbar-brand">
             <small>
               <i class="fa fa-leaf"></i>
-              Ace Admin
+              Online Course
             </small>
           </a>
         </div>
@@ -234,7 +234,7 @@
                     <li>
                       <a href="#" class="clearfix">
                         <img
-                          src="assets/images/avatars/avatar.png"
+                          src="../../public/ace/assets/images/avatars/avatar.png"
                           class="msg-photo"
                           alt="Alex's Avatar"
                         />
@@ -255,7 +255,7 @@
                     <li>
                       <a href="#" class="clearfix">
                         <img
-                          src="assets/images/avatars/avatar3.png"
+                          src="../../public/ace/assets/images/avatars/avatar3.png"
                           class="msg-photo"
                           alt="Susan's Avatar"
                         />
@@ -276,7 +276,7 @@
                     <li>
                       <a href="#" class="clearfix">
                         <img
-                          src="assets/images/avatars/avatar4.png"
+                          src="../../public/ace/assets/images/avatars/avatar4.png"
                           class="msg-photo"
                           alt="Bob's Avatar"
                         />
@@ -297,7 +297,7 @@
                     <li>
                       <a href="#" class="clearfix">
                         <img
-                          src="assets/images/avatars/avatar2.png"
+                          src="../../public/ace/assets/images/avatars/avatar2.png"
                           class="msg-photo"
                           alt="Kate's Avatar"
                         />
@@ -318,7 +318,7 @@
                     <li>
                       <a href="#" class="clearfix">
                         <img
-                          src="assets/images/avatars/avatar5.png"
+                          src="../../public/ace/assets/images/avatars/avatar5.png"
                           class="msg-photo"
                           alt="Fred's Avatar"
                         />
@@ -351,7 +351,7 @@
               <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                 <img
                   class="nav-user-photo"
-                  src="assets/images/avatars/user.jpg"
+                  src="../../public/ace/assets/images/avatars/user.jpg"
                   alt="Jason's Photo"
                 />
                 <span class="user-info">
