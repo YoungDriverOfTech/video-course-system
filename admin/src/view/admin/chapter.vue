@@ -1283,5 +1283,13 @@
 </template>
 
 <script>
-export default {};
+export default {
+    name: 'chapter',
+    mounted: function() {
+        this.$parent.activeSidebar('business-chapter-sidebar');
+    },
+    methods: {
+        
+    }
+};
 </script>
