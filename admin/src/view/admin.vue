@@ -472,9 +472,25 @@
 export default {
     name: 'admin',
     mounted: function() {
+      let _this = this;
       $('body').removeClass('login-layout light-login');
       $('body').attr('class', 'no-skin');
+      // initiate sidebar css
+      _this.activeSidebar(_this.$route.name.replace('/', '-') + '-sidebar');
+
     },
+
+    watch: {
+      $route: {
+        handler: function() {
+          let _this = this;
+          _this.$nextTick(function() {  // execute after page loaded
+            _this.activeSidebar(_this.$route.name.replace('/', '-') + '-sidebar');
+          })
+        }
+      }
+    },
+
     methods: {
       activeSidebar: function(id) {
         // remove siblings's active class, and add self a actice class
