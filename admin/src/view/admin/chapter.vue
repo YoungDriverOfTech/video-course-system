@@ -1286,10 +1286,12 @@
 export default {
     name: 'chapter',
     mounted: function() {
+        console.log("1111");
         this.$parent.activeSidebar('business-chapter-sidebar');
+        console.log("2222");
     },
     methods: {
-        
+
     }
 };
 </script>
