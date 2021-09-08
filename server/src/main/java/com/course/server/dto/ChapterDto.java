@@ -1,4 +1,4 @@
-package com.course.server.dao;
+package com.course.server.dto;
 
 public class ChapterDto {
     private String id;
