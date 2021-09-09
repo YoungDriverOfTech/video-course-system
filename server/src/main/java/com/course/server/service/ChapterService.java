@@ -11,6 +11,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -38,8 +39,20 @@ public class ChapterService {
     }
 
     public void save(ChapterDto chapterDto) {
-        chapterDto.setId(UuidUtil.getShortUuid());
         Chapter chapter = CopyUtil.copy(chapterDto, Chapter.class);
+        if (StringUtils.isEmpty(chapter.getId())) {
+            this.insert(chapter);
+        } else {
+            this.update(chapter);
+        }
+    }
+
+    private void insert(Chapter chapter) {
+        chapter.setId(UuidUtil.getShortUuid());
         chapterMapper.insert(chapter);
+    }
+
+    private void update(Chapter chapter) {
+        chapterMapper.updateByPrimaryKey(chapter);
     }
 }
