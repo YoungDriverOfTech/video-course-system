@@ -14,7 +14,7 @@ public class UuidUtil {
      * get short uuid
      */
     public static String getShortUuid() {
-        StringBuffer shortBuffer = new StringBuffer();
+        StringBuilder shortBuffer = new StringBuilder();
         String uuid = UuidUtil.getUuid();
         for (int i = 0; i < 8; i++) {
             String str = uuid.substring(i * 4, i * 4 + 4);
@@ -30,7 +30,6 @@ public class UuidUtil {
      */
     public static String getUuid(){
         String uuid = UUID.randomUUID().toString();
-        //去掉“-”符号
         return uuid.replaceAll("-", "");
     }
 }
