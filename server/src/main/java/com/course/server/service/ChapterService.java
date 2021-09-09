@@ -22,12 +22,16 @@ public class ChapterService {
     @Resource
     private ChapterMapper chapterMapper;
 
-    public void list(PageDto pageDto) {
+    public void list(PageDto<ChapterDto> pageDto) {
+        // paging and select records
         PageHelper.startPage(pageDto.getPage(), pageDto.getSize());
         ChapterExample chapterExample = new ChapterExample();
         List<Chapter> chapterList = chapterMapper.selectByExample(chapterExample);
+
+        // set properties
         PageInfo<Chapter> pageInfo = new PageInfo<>(chapterList);
         pageDto.setTotal(pageInfo.getTotal());
+
         // transfer chapterList into chapterDtoList
         List<ChapterDto> chapterDtoList = CopyUtil.copyList(chapterList, ChapterDto.class);
         pageDto.setList(chapterDtoList);
