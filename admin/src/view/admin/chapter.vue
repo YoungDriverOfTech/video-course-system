@@ -128,21 +128,21 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label">Name</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" placeholder="Name">
+                  <input v-model="chapter.name" type="text" class="form-control" placeholder="Name">
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="col-sm-2 control-label">Course Id</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" placeholder="Course Id">
+                  <input v-model="chapter.courseId" type="text" class="form-control" placeholder="Course Id">
                 </div>
               </div>
             </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary">Save</button>
+            <button v-on:click="save()" type="button" class="btn btn-primary">Save</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -158,6 +158,7 @@ export default {
   data: function () {
     return {
       chapters: [],
+      chapter: {},
     };
   },
   mounted: function () {
@@ -186,6 +187,15 @@ export default {
           _this.$refs.pagination.render(page, response.data.total);
         });
     },
+
+    save() {
+      let _this = this;
+      _this.$ajax
+        .post("http://127.0.0.1:9000/business/admin/chapter/save", _this.chapter)
+        .then((response) => {
+          console.log(response);
+        });
+    }
   },
 };
 </script>
