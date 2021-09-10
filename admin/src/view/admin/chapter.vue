@@ -172,6 +172,7 @@ export default {
           if (resp.success) {
             $("#add-chapter-modal-form").modal("hide");
             _this.list(1);
+            toast.success('saved');
           }
         });
     },
@@ -198,8 +199,7 @@ export default {
               }
             });
 
-          Swal.fire("Deleted!", "Your operation is completed!.", "success");
-
+          toast.success('deleted');
         }
       });
     },
