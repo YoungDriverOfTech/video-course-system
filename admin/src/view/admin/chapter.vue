@@ -176,27 +176,16 @@ export default {
           if (resp.success) {
             $("#add-chapter-modal-form").modal("hide");
             _this.list(1);
-            toast.success('saved');
+            Toast.success('saved');
           }
         });
     },
 
     del(id) {
       let _this = this;
-
-      Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
-      }).then((result) => {
-        if (result.isConfirmed) {
-
-          Loading.show();
-          _this.$ajax
+      Confirm.show('Please confirm your delete operation!', function() {
+        Loading.show();
+        _this.$ajax
             .delete("http://127.0.0.1:9000/business/admin/chapter/delete/" + id)
             .then((response) => {
               Loading.hide();
@@ -205,8 +194,7 @@ export default {
                 _this.list(1);
               }
             });
-          toast.success('deleted');
-        }
+          Toast.success('deleted');
       });
     },
   },
