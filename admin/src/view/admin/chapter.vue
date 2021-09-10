@@ -12,7 +12,11 @@
       </button>
     </p>
 
-    <pagination ref="pagination" v-bind:list="list" v-bind:itemCount="8"></pagination>
+    <pagination
+      ref="pagination"
+      v-bind:list="list"
+      v-bind:itemCount="8"
+    ></pagination>
 
     <table id="simple-table" class="table table-bordered table-hover">
       <thead>
@@ -35,7 +39,10 @@
                 <i class="ace-icon fa fa-pencil bigger-120"></i>
               </button>
 
-              <button v-on:click="del(chapter.id)" class="btn btn-xs btn-danger">
+              <button
+                v-on:click="del(chapter.id)"
+                class="btn btn-xs btn-danger"
+              >
                 <i class="ace-icon fa fa-trash-o bigger-120"></i>
               </button>
             </div>
@@ -44,11 +51,23 @@
       </tbody>
     </table>
 
-    <div id="add-chapter-modal-form" class="modal fade" tabindex="-1" role="dialog">
+    <div
+      id="add-chapter-modal-form"
+      class="modal fade"
+      tabindex="-1"
+      role="dialog"
+    >
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
             <h4 class="modal-title">表单</h4>
           </div>
           <div class="modal-body">
@@ -56,32 +75,49 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label">Name</label>
                 <div class="col-sm-10">
-                  <input v-model="chapter.name" type="text" class="form-control" placeholder="Name">
+                  <input
+                    v-model="chapter.name"
+                    type="text"
+                    class="form-control"
+                    placeholder="Name"
+                  />
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="col-sm-2 control-label">Course Id</label>
                 <div class="col-sm-10">
-                  <input v-model="chapter.courseId" type="text" class="form-control" placeholder="Course Id">
+                  <input
+                    v-model="chapter.courseId"
+                    type="text"
+                    class="form-control"
+                    placeholder="Course Id"
+                  />
                 </div>
               </div>
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            <button v-on:click="save()" type="button" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+              Cancel
+            </button>
+            <button v-on:click="save()" type="button" class="btn btn-primary">
+              Save
+            </button>
           </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
   </div>
 </template>
 
 <script>
-import Pagination from '../../components/pagination'
+import Pagination from "../../components/pagination";
 export default {
-  components: {Pagination},
+  components: { Pagination },
   name: "chapter",
   data: function () {
     return {
@@ -99,15 +135,15 @@ export default {
     add() {
       let _this = this;
       _this.chapter = {};
-      $('#add-chapter-modal-form').modal('show');
+      $("#add-chapter-modal-form").modal("show");
     },
 
     edit(chapter) {
       let _this = this;
       // using parameter chapter directly will afffect table displayed in page, thus make a deep copy for parameter chapter
-      // $.extend(target, source);  this deep copy method is provided by jquery 
+      // $.extend(target, source);  this deep copy method is provided by jquery
       _this.chapter = $.extend({}, chapter);
-      $('#add-chapter-modal-form').modal('show');
+      $("#add-chapter-modal-form").modal("show");
     },
 
     list(page) {
@@ -127,11 +163,14 @@ export default {
     save() {
       let _this = this;
       _this.$ajax
-        .post("http://127.0.0.1:9000/business/admin/chapter/save", _this.chapter)
+        .post(
+          "http://127.0.0.1:9000/business/admin/chapter/save",
+          _this.chapter
+        )
         .then((response) => {
           let resp = response.data;
           if (resp.success) {
-            $('#add-chapter-modal-form').modal('hide');
+            $("#add-chapter-modal-form").modal("hide");
             _this.list(1);
           }
         });
@@ -139,15 +178,31 @@ export default {
 
     del(id) {
       let _this = this;
-      _this.$ajax
-        .delete("http://127.0.0.1:9000/business/admin/chapter/delete/" + id)
-        .then((response) => {
-          let resp = response.data;
-          if (resp.success) {
-            _this.list(1);
-          }
-        });
-    }
+
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          _this.$ajax
+            .delete("http://127.0.0.1:9000/business/admin/chapter/delete/" + id)
+            .then((response) => {
+              let resp = response.data;
+              if (resp.success) {
+                _this.list(1);
+              }
+            });
+
+          Swal.fire("Deleted!", "Your operation is completed!.", "success");
+
+        }
+      });
+    },
   },
 };
 </script>
