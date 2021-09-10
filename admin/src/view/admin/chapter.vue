@@ -185,6 +185,8 @@ export default {
             $("#add-chapter-modal-form").modal("hide");
             _this.list(1);
             Toast.success("saved");
+          } else {
+            Toast.warning(resp.message);
           }
         });
     },
