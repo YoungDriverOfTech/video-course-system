@@ -164,6 +164,14 @@ export default {
 
     save() {
       let _this = this;
+
+      // require and length check
+      if (!Validator.require(_this.chapter.name, "name") ||
+        !Validator.require(_this.chapter.courseId, "courseId") ||
+        !Validator.length(_this.chapter.courseId, "courseId", 1, 8)) {
+        return;
+      }
+
       Loading.show();
       _this.$ajax
         .post(
@@ -176,25 +184,25 @@ export default {
           if (resp.success) {
             $("#add-chapter-modal-form").modal("hide");
             _this.list(1);
-            Toast.success('saved');
+            Toast.success("saved");
           }
         });
     },
 
     del(id) {
       let _this = this;
-      Confirm.show('Please confirm your delete operation!', function() {
+      Confirm.show("Please confirm your delete operation!", function () {
         Loading.show();
         _this.$ajax
-            .delete("http://127.0.0.1:9000/business/admin/chapter/delete/" + id)
-            .then((response) => {
-              Loading.hide();
-              let resp = response.data;
-              if (resp.success) {
-                _this.list(1);
-              }
-            });
-          Toast.success('deleted');
+          .delete("http://127.0.0.1:9000/business/admin/chapter/delete/" + id)
+          .then((response) => {
+            Loading.hide();
+            let resp = response.data;
+            if (resp.success) {
+              _this.list(1);
+            }
+          });
+        Toast.success("deleted");
       });
     },
   },
