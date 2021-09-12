@@ -30,13 +30,13 @@ public class LogAspect {
 
     private final static Logger LOG = LoggerFactory.getLogger(LogAspect.class);
 
-    /** 定义一个切点 */
+    /** definde a pointcut */
     @Pointcut("execution(public * com.course.*.controller..*Controller.*(..))")
     public void controllerPointcut() {}
 
     @Before("controllerPointcut()")
     public void doBefore(JoinPoint joinPoint) throws Throwable {
-        // 日志编号
+        // log number
         MDC.put("UUID", UuidUtil.getShortUuid());
 
         // 开始打印请求日志
@@ -45,7 +45,7 @@ public class LogAspect {
         Signature signature = joinPoint.getSignature();
         String name = signature.getName();
 
-        // 打印业务操作
+        // log business operation
         String nameCn = "";
         if (name.contains("list") || name.contains("query")) {
             nameCn = "查询";
@@ -57,7 +57,7 @@ public class LogAspect {
             nameCn = "操作";
         }
 
-        // 使用反射，获取业务名称
+        // get business name through reflection
         Class clazz = signature.getDeclaringType();
         Field field;
         String businessName = "";
@@ -67,16 +67,16 @@ public class LogAspect {
                 businessName = (String) field.get(clazz);
             }
         } catch (NoSuchFieldException e) {
-            LOG.error("未获取到业务名称");
+            LOG.error("Can not get business name");
         } catch (SecurityException e) {
-            LOG.error("获取业务名称失败", e);
+            LOG.error("Get business name failed", e);
         }
 
         // 打印请求信息
-        LOG.info("------------- 【{}】{}开始 -------------", businessName, nameCn);
-        LOG.info("请求地址: {} {}", request.getRequestURL().toString(), request.getMethod());
-        LOG.info("类名方法: {}.{}", signature.getDeclaringTypeName(), name);
-        LOG.info("远程地址: {}", request.getRemoteAddr());
+        LOG.info("------------- 【{}】{}Start -------------", businessName, nameCn);
+        LOG.info("request attr: {} {}", request.getRequestURL().toString(), request.getMethod());
+        LOG.info("class method: {}.{}", signature.getDeclaringTypeName(), name);
+        LOG.info("remote attr: {}", request.getRemoteAddr());
 
         // 打印请求参数
         Object[] args = joinPoint.getArgs();
@@ -94,7 +94,7 @@ public class LogAspect {
         PropertyPreFilters filters = new PropertyPreFilters();
         PropertyPreFilters.MySimplePropertyPreFilter excludefilter = filters.addFilter();
         excludefilter.addExcludes(excludeProperties);
-        LOG.info("请求参数: {}", JSONObject.toJSONString(arguments, excludefilter)); // 为空的会不打印，但是像图片等长字段也会打印
+        LOG.info("request parameter: {}", JSONObject.toJSONString(arguments, excludefilter)); // 为空的会不打印，但是像图片等长字段也会打印
     }
 
     @Around("controllerPointcut()")
@@ -106,8 +106,8 @@ public class LogAspect {
         PropertyPreFilters filters = new PropertyPreFilters();
         PropertyPreFilters.MySimplePropertyPreFilter excludefilter = filters.addFilter();
         excludefilter.addExcludes(excludeProperties);
-        LOG.info("返回结果: {}", JSONObject.toJSONString(result, excludefilter));
-        LOG.info("------------- 结束 耗时：{} ms -------------", System.currentTimeMillis() - startTime);
+        LOG.info("response result: {}", JSONObject.toJSONString(result, excludefilter));
+        LOG.info("------------- ENd spend：{} ms -------------", System.currentTimeMillis() - startTime);
         return result;
     }
 
