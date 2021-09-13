@@ -72,13 +72,13 @@ public class LogAspect {
             LOG.error("Get business name failed", e);
         }
 
-        // 打印请求信息
+        // log request info
         LOG.info("------------- 【{}】{}Start -------------", businessName, nameCn);
         LOG.info("request attr: {} {}", request.getRequestURL().toString(), request.getMethod());
         LOG.info("class method: {}.{}", signature.getDeclaringTypeName(), name);
         LOG.info("remote attr: {}", request.getRemoteAddr());
 
-        // 打印请求参数
+        // log request parameter
         Object[] args = joinPoint.getArgs();
         Object[] arguments  = new Object[args.length];
         for (int i = 0; i < args.length; i++) {
@@ -89,7 +89,7 @@ public class LogAspect {
             }
             arguments[i] = args[i];
         }
-        // 排除字段，敏感字段或太长的字段不显示
+        // exclude private infomation
         String[] excludeProperties = {};
         PropertyPreFilters filters = new PropertyPreFilters();
         PropertyPreFilters.MySimplePropertyPreFilter excludefilter = filters.addFilter();
