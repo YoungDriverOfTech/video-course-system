@@ -21,6 +21,28 @@ insert into `chapter` (id, course_id, name) values ('00000012', '00000000', '测
 insert into `chapter` (id, course_id, name) values ('00000013', '00000000', '测试大章13');
 insert into `chapter` (id, course_id, name) values ('00000014', '00000000', '测试大章14');
 
+
+-- Section
+DROP TABLE IF EXISTS `section`;
+CREATE TABLE `section` (
+  `id` CHAR(8) NOT NULL DEFAULT '' COMMENT 'ID',
+  `title` VARCHAR(50) NOT NULL COMMENT 'title',
+  `course_id` CHAR(8) COMMENT 'course.id',
+  `chapter_id` CHAR(8) COMMENT 'chapter.id',
+  `video` VARCHAR(200) COMMENT 'video',
+  `time` INT COMMENT 'video length',
+  `charge` CHAR(1) COMMENT 'is free or not',
+  `sort` INT COMMENT 'sort',
+  `created_at` DATETIME(3) COMMENT 'created_at',
+  `updated_at` DATETIME(3) COMMENT 'updated_at',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Section';
+
+INSERT INTO `section` (id, title, course_id, chapter_id, video, time, charge, sort, created_at, updated_at)
+VALUES ('00000001', '测试小节01', '00000001', '00000000', '', 500, 'F', 1, now(), now());
+
+
+
 -----for test======
 drop table if exists `test`;
 create table `test` (
