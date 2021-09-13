@@ -10,6 +10,7 @@ import java.util.Map;
 public class ServerGenerator {
 
     static String toServicePath = "server\\src\\main\\java\\com\\course\\server\\service\\";
+    static String toControllerPath = "business\\src\\main\\java\\com\\course\\business\\controller\\admin\\";
 
     public static void main(String[] args) throws IOException, TemplateException {
         String domainUpperCase = "Section";
@@ -18,8 +19,13 @@ public class ServerGenerator {
         map.put("Domain", domainUpperCase);
         map.put("domain", domainLowerCase);
 
-
+        // generate service layer
         FreemarkerUtil.initConfig("service.ftl");
         FreemarkerUtil.generator(toServicePath + domainUpperCase + "Service.java", map);
+
+        // generate controller layer
+        FreemarkerUtil.initConfig("controller.ftl");
+        FreemarkerUtil.generator(toControllerPath + domainUpperCase + "Controller.java", map);
+
     }
 }
