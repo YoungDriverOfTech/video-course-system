@@ -98,7 +98,6 @@ export default {
     mounted: function() {
       $('body').removeClass('no-skin');
       $('body').attr('class', 'login-layout light-login');
-      console.log('login');
     },
     methods: {
         login() {
