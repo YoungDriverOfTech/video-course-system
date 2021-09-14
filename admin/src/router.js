@@ -4,6 +4,7 @@ import Login from './view/login.vue'
 import Admin from './view/admin.vue'
 import Welcome from './view/admin/welcome.vue'
 import Chapter from './view/admin/chapter.vue'
+import Section from './view/admin/section.vue'
 
 Vue.use(Router)
 
@@ -33,7 +34,12 @@ export default new Router({
                     path: 'business/chapter',
                     name: 'business/chapter',
                     component: Chapter
-                }
+                },
+                {
+                    path: 'business/section',
+                    name: 'business/section',
+                    component: Section
+                },
             ]
         }
     ]
