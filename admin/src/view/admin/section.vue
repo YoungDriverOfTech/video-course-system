@@ -212,13 +212,6 @@ export default {
     save() {
       let _this = this;
 
-      // require and length check
-      // if (!Validator.require(_this.section.name, "name") ||
-      //   !Validator.require(_this.section.courseId, "courseId") ||
-      //   !Validator.length(_this.section.courseId, "courseId", 1, 8)) {
-      //   return;
-      // }
-
       Loading.show();
       _this.$ajax
         .post(
