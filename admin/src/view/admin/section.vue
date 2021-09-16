@@ -29,14 +29,12 @@
           <th>video length</th>
           <th>is free or not</th>
           <th>sort</th>
-          <th>created_at</th>
-          <th>updated_at</th>
           <th>操作</th>
         </tr>
       </thead>
 
       <tbody>
-        <tr v-for="section in sections">
+        <tr v-for="section in sections" v-bind:key="section.index">
             <td>{{section.id}}</td>
             <td>{{section.title}}</td>
             <td>{{section.courseId}}</td>
@@ -45,8 +43,6 @@
             <td>{{section.time}}</td>
             <td>{{section.charge}}</td>
             <td>{{section.sort}}</td>
-            <td>{{section.createdAt}}</td>
-            <td>{{section.updatedAt}}</td>
           <td>
             <div class="hidden-sm hidden-xs btn-group">
               <button v-on:click="edit(section)" class="btn btn-xs btn-info">
@@ -82,12 +78,6 @@
           </div>
           <div class="modal-body">
             <form class="form-horizontal">
-              <div class="form-group">
-                <label class="col-sm-2 control-label">ID</label>
-                <div class="col-sm-10">
-                  <input v-model="section.id" class="form-control">
-                </div>
-              </div>
               <div class="form-group">
                 <label class="col-sm-2 control-label">title</label>
                 <div class="col-sm-10">
@@ -128,18 +118,6 @@
                 <label class="col-sm-2 control-label">sort</label>
                 <div class="col-sm-10">
                   <input v-model="section.sort" class="form-control">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-2 control-label">created_at</label>
-                <div class="col-sm-10">
-                  <input v-model="section.createdAt" class="form-control">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-2 control-label">updated_at</label>
-                <div class="col-sm-10">
-                  <input v-model="section.updatedAt" class="form-control">
                 </div>
               </div>
             </form>
@@ -214,7 +192,6 @@ export default {
 
       // require and length check
       if (1 != 1
-        || !Validator.require(_this.section.id, "ID")
         || !Validator.require(_this.section.title, "title")
         || !Validator.length(_this.section.title, "title", 1, 50)
         || !Validator.length(_this.section.video, "video", 1, 200)

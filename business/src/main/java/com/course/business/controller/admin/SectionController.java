@@ -35,7 +35,6 @@ public class SectionController {
         LOG.info("sectionDto: {}", sectionDto);
 
         // check operation
-        ValidatorUtil.require(sectionDto.getId(), "ID");
         ValidatorUtil.require(sectionDto.getTitle(), "title");
         ValidatorUtil.length(sectionDto.getTitle(), "title", 1, 50);
         ValidatorUtil.length(sectionDto.getVideo(), "video", 1, 200);
