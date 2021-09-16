@@ -35,9 +35,14 @@ public class ${Domain}Controller {
         LOG.info("${domain}Dto: {}", ${domain}Dto);
 
         // check operation
-        ValidatorUtil.require(${domain}Dto.getName(), "name");
-        ValidatorUtil.require(${domain}Dto.getCourseId(), "CourseId");
-        ValidatorUtil.length(${domain}Dto.getCourseId(), "CourseId", 1, 8);
+        <#list fieldList as field>
+            <#if !field.nullAble>
+        ValidatorUtil.require(${domain}Dto.get${field.nameBigHump}(), "${field.nameCn}");
+            </#if>
+            <#if (field.length > 0)>
+        ValidatorUtil.length(${domain}Dto.get${field.nameBigHump}(), "${field.nameCn}", 1, ${field.length});
+            </#if>
+        </#list>
 
         // save operation
         ResponseDto<${Domain}Dto> responseDto = new ResponseDto<>();

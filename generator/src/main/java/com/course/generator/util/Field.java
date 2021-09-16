@@ -8,6 +8,8 @@ public class Field {
     private String type; // type：char(8)
     private String javaType; // java type：String
     private String comment; // comment：course Id
+    private Boolean nullAble; // is null or not
+    private Integer length; // field length
 
     public String getName() {
         return name;
@@ -65,6 +67,22 @@ public class Field {
         this.comment = comment;
     }
 
+    public Boolean getNullAble() {
+        return nullAble;
+    }
+
+    public void setNullAble(Boolean nullAble) {
+        this.nullAble = nullAble;
+    }
+
+    public Integer getLength() {
+        return length;
+    }
+
+    public void setLength(Integer length) {
+        this.length = length;
+    }
+
     @Override
     public String toString() {
         return "Field{" +
@@ -75,6 +93,8 @@ public class Field {
                 ", type='" + type + '\'' +
                 ", javaType='" + javaType + '\'' +
                 ", comment='" + comment + '\'' +
+                ", nullAble=" + nullAble +
+                ", length=" + length +
                 '}';
     }
 }

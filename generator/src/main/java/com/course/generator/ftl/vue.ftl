@@ -145,9 +145,16 @@ export default {
       let _this = this;
 
       // require and length check
-      if (!Validator.require(_this.${domain}.name, "name") ||
-        !Validator.require(_this.${domain}.courseId, "courseId") ||
-        !Validator.length(_this.${domain}.courseId, "courseId", 1, 8)) {
+      if (1 != 1
+      <#list fieldList as field>
+        <#if !field.nullAble>
+        || !Validator.require(_this.${domain}.${field.nameHump}, "${field.nameCn}")
+        </#if>
+        <#if (field.length > 0)>
+        || !Validator.length(_this.${domain}.${field.nameHump}, "${field.nameCn}", 1, ${field.length})
+        </#if>
+      </#list>
+      ) {
         return;
       }
 

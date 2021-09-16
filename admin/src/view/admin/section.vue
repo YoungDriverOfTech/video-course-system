@@ -36,7 +36,7 @@
       </thead>
 
       <tbody>
-        <tr v-for="section in sections" v-bind:key="section.index">
+        <tr v-for="section in sections">
             <td>{{section.id}}</td>
             <td>{{section.title}}</td>
             <td>{{section.courseId}}</td>
@@ -197,7 +197,7 @@ export default {
       let _this = this;
       Loading.show();
       _this.$ajax
-        .post(process.env.VUE_APP_SERVER + "/business/admin/section/list", {
+        .post("http://127.0.0.1:9000/business/admin/section/list", {
           page: page,
           size: _this.$refs.pagination.size,
         })
@@ -212,10 +212,20 @@ export default {
     save() {
       let _this = this;
 
+      // require and length check
+      if (1 != 1
+        || !Validator.require(_this.section.id, "ID")
+        || !Validator.require(_this.section.title, "title")
+        || !Validator.length(_this.section.title, "title", 1, 50)
+        || !Validator.length(_this.section.video, "video", 1, 200)
+      ) {
+        return;
+      }
+
       Loading.show();
       _this.$ajax
         .post(
-          process.env.VUE_APP_SERVER + "/business/admin/section/save",
+          "http://127.0.0.1:9000/business/admin/section/save",
           _this.section
         )
         .then((response) => {
@@ -236,7 +246,7 @@ export default {
       Confirm.show("Please confirm your delete operation!", function () {
         Loading.show();
         _this.$ajax
-          .delete(process.env.VUE_APP_SERVER + "/business/admin/section/delete/" + id)
+          .delete("http://127.0.0.1:9000/business/admin/section/delete/" + id)
           .then((response) => {
             Loading.hide();
             let resp = response.data;

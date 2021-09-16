@@ -35,9 +35,10 @@ public class SectionController {
         LOG.info("sectionDto: {}", sectionDto);
 
         // check operation
-//        ValidatorUtil.require(sectionDto.getName(), "name");
-//        ValidatorUtil.require(sectionDto.getCourseId(), "CourseId");
-//        ValidatorUtil.length(sectionDto.getCourseId(), "CourseId", 1, 8);
+        ValidatorUtil.require(sectionDto.getId(), "ID");
+        ValidatorUtil.require(sectionDto.getTitle(), "title");
+        ValidatorUtil.length(sectionDto.getTitle(), "title", 1, 50);
+        ValidatorUtil.length(sectionDto.getVideo(), "video", 1, 200);
 
         // save operation
         ResponseDto<SectionDto> responseDto = new ResponseDto<>();
