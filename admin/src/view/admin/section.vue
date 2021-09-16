@@ -41,7 +41,7 @@
             <td>{{section.chapterId}}</td>
             <td>{{section.video}}</td>
             <td>{{section.time}}</td>
-            <td>{{section.charge}}</td>
+            <td>{{CHARGE | optionKV(section.charge)}}</td>
             <td>{{section.sort}}</td>
           <td>
             <div class="hidden-sm hidden-xs btn-group">
@@ -111,7 +111,9 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label">is free or not</label>
                 <div class="col-sm-10">
-                  <input v-model="section.charge" class="form-control">
+                  <select v-model="section.charge" class="form-control">
+                    <option v-for="o in CHARGE" v-bind:value="o.key" v-bind:key='o.key'>{{o.value}}</option>
+                  </select>
                 </div>
               </div>
               <div class="form-group">
@@ -143,11 +145,12 @@
 import Pagination from "../../components/pagination";
 export default {
   components: { Pagination },
-  name: "section",
+  name: "business-section",
   data: function () {
     return {
       sections: [],
       section: {},
+      CHARGE: [{key:"C", value:"charge"},{key:"F", value:"free"}],
     };
   },
   mounted: function () {
