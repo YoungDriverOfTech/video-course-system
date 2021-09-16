@@ -150,7 +150,7 @@ export default {
     return {
       sections: [],
       section: {},
-      CHARGE: [{key:"C", value:"charge"},{key:"F", value:"free"}],
+      CHARGE: CHARGE,
     };
   },
   mounted: function () {

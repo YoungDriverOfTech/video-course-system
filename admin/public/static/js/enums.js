@@ -1,0 +1,1 @@
+CHARGE = [{key:"C", value:"charge"},{key:"F", value:"free"}];
