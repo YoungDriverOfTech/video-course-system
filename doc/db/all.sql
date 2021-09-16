@@ -1,3 +1,27 @@
+-- Course
+drop table if exists course;
+create table course (
+  id char(8) not null default '' comment 'id',
+  name varchar(50) not null comment 'name',
+  summary varchar(2000) comment 'summary',
+  time int default 0 comment 'video length| unit second',
+  price decimal(8,2) default 0.00 comment 'price',
+  image varchar(100) comment 'profile',
+  level char(1) comment 'level |enums[CourseLevelEnum]：ONE("1", "primary"),TWO("2", "middle"),THREE("3", "senior")',
+  charge char(1) comment 'charge |enums[CourseChargeEnum]：CHARGE("C", "charge"),FREE("F", "free")',
+  status char(1) comment 'status |enums[CourseStatusEnum]：PUBLISH("P", "published"),DRAFT("D", "draft")',
+  enroll integer default 0 comment 'enroll number',
+  sort int comment 'sort order',
+  created_at datetime(3) comment 'created_at',
+  updated_at datetime(3) comment 'updated_at',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 comment='course';
+
+INSERT INTO course (id, name, summary, time, price, image, level, charge, status, enroll, sort, created_at, updated_at)
+VALUES ('00000001', '测试课程01', '这是一门测试课程', 7200, 19.9, '', 1, 'C', 'D', 100, 0, now(), now());
+
+
+-- Chapter
 drop table if exists `chapter`;
 create table `chapter` (
   `id` char(8) not null comment 'Id',
