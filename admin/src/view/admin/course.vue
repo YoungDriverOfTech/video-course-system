@@ -12,16 +12,12 @@
       </button>
     </p>
 
-    <pagination
-      ref="pagination"
-      v-bind:list="list"
-      v-bind:itemCount="8"
-    ></pagination>
+    <pagination ref="pagination" v-bind:list="list" v-bind:itemCount="8"></pagination>
 
     <div class="row">
       <div v-for="course in courses" class="col-md-4" v-bind:key="course.index">
         <div class="thumbnail search-thumbnail">
-          <img v-show="!course.image" class="media-object" src="/static/image/demo-course.jpg" />
+          <img v-show="!course.image" class="media-object w-100" src="/static/image/demo-course.jpg" />
           <img v-show="course.image" class="media-object" v-bind:src="course.image" />
           <div class="caption">
             <div class="clearfix">
@@ -279,3 +275,13 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+  .caption h3 {
+    font-size: 20px;
+  }
+
+  .w-100 {
+    width: 100%;
+  }
+</style>
