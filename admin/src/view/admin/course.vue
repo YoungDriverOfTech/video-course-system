@@ -49,6 +49,9 @@
               <span class="badge badge-info">length: {{course.time}}</span>
             </p>
             <p>
+              <button v-on:click="toChapter(course)" class="btn btn-white btn-xs btn-info btn-round">
+                Chapter
+              </button>&nbsp;
               <button v-on:click="edit(course)" class="btn btn-white btn-xs btn-info btn-round">
                 edit
               </button>&nbsp;
@@ -60,51 +63,6 @@
         </div>
       </div>
     </div>
-
-    <!-- <table id="simple-table" class="table table-bordered table-hover">
-      <thead>
-        <tr>
-          <th>id</th>
-          <th>name</th>
-          <th>summary</th>
-          <th>video length</th>
-          <th>price</th>
-          <th>profile</th>
-          <th>level </th>
-          <th>charge </th>
-          <th>status </th>
-          <th>enroll number</th>
-          <th>sort order</th>
-          <th>操作</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr v-for="course in courses" v-bind:key="course.index">
-            <td>{{course.id}}</td>
-            <td>{{course.name}}</td>
-            <td>{{course.summary}}</td>
-            <td>{{course.time}}</td>
-            <td>{{course.price}}</td>
-            <td>{{course.image}}</td>
-            <td>{{COURSE_LEVEL | optionKV(course.level)}}</td>
-            <td>{{COURSE_CHARGE | optionKV(course.charge)}}</td>
-            <td>{{COURSE_STATUS | optionKV(course.status)}}</td>
-            <td>{{course.enroll}}</td>
-            <td>{{course.sort}}</td>
-          <td>
-            <div class="hidden-sm hidden-xs btn-group">
-              <button v-on:click="edit(course)" class="btn btn-xs btn-info">
-                <i class="ace-icon fa fa-pencil bigger-120"></i>
-              </button>
-              <button v-on:click="del(course.id)" class="btn btn-xs btn-danger">
-                <i class="ace-icon fa fa-trash-o bigger-120"></i>
-              </button>
-            </div>
-          </td>
-          </tr>
-      </tbody>
-    </table> -->
 
     <div
       id="add-course-modal-form"
@@ -311,6 +269,13 @@ export default {
         Toast.success("deleted");
       });
     },
+
+    // jump to chapter page
+    toChapter(course) {
+      let _this = this;
+      SessionStorage.set('course', course);
+      _this.$router.push('/business/chapter');
+    }
   },
 };
 </script>
