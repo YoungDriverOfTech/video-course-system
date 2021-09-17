@@ -3,6 +3,7 @@ package com.course.business.controller.admin;
 import com.course.server.dto.SectionDto;
 import com.course.server.dto.PageDto;
 import com.course.server.dto.ResponseDto;
+import com.course.server.dto.SectionPageDto;
 import com.course.server.service.SectionService;
 import com.course.server.util.ValidatorUtil;
 import org.slf4j.Logger;
@@ -22,11 +23,12 @@ public class SectionController {
     private SectionService sectionService;
 
     @PostMapping("/list")
-    public ResponseDto<PageDto<SectionDto>> list(@RequestBody PageDto<SectionDto> pageDto) {
-        LOG.info("pageDto: {}", pageDto);
+    public ResponseDto<PageDto<SectionDto>> list(@RequestBody SectionPageDto sectionPageDto) {
         ResponseDto<PageDto<SectionDto>> responseDto = new ResponseDto<>();
-        sectionService.list(pageDto);
-        responseDto.setContent(pageDto);
+        ValidatorUtil.require(sectionPageDto.getCourseId(), "CourseId");
+        ValidatorUtil.require(sectionPageDto.getChapterId(), "ChapterId");
+        sectionService.list(sectionPageDto);
+        responseDto.setContent(sectionPageDto);
         return responseDto;
     }
 

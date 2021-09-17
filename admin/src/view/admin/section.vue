@@ -1,5 +1,12 @@
 <template>
   <div>
+    <h4 class="lighter">
+      <i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
+      <router-link to="/business/course" class="pink"> {{course.name}} </router-link>：
+      <i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
+      <router-link to="/business/chapter" class="pink"> {{chapter.name}} </router-link>
+    </h4>
+    <hr>
     <p>
       <button v-on:click="add()" class="btn btn-white btn-default btn-round">
         <i class="ace-icon fa fa-edit"></i>
@@ -23,8 +30,6 @@
         <tr>
           <th>ID</th>
           <th>title</th>
-          <th>course.id</th>
-          <th>chapter.id</th>
           <th>video</th>
           <th>video length</th>
           <th>is free or not</th>
@@ -37,8 +42,6 @@
         <tr v-for="section in sections" v-bind:key="section.index">
             <td>{{section.id}}</td>
             <td>{{section.title}}</td>
-            <td>{{section.courseId}}</td>
-            <td>{{section.chapterId}}</td>
             <td>{{section.video}}</td>
             <td>{{section.time}}</td>
             <td>{{SECTION_CHARGE | optionKV(section.charge)}}</td>
@@ -57,21 +60,11 @@
       </tbody>
     </table>
 
-    <div
-      id="add-section-modal-form"
-      class="modal fade"
-      tabindex="-1"
-      role="dialog"
-    >
+    <div id="add-section-modal-form" class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
             <h4 class="modal-title">表单</h4>
@@ -85,15 +78,15 @@
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-2 control-label">course.id</label>
+                <label class="col-sm-2 control-label">course</label>
                 <div class="col-sm-10">
-                  <input v-model="section.courseId" class="form-control">
+                  <p class="form-control-static">{{course.name}}</p>
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-2 control-label">chapter.id</label>
+                <label class="col-sm-2 control-label">chapter</label>
                 <div class="col-sm-10">
-                  <input v-model="section.chapterId" class="form-control">
+                  <p class="form-control-static">{{chapter.name}}</p>
                 </div>
               </div>
               <div class="form-group">
@@ -151,12 +144,22 @@ export default {
       sections: [],
       section: {},
       SECTION_CHARGE: SECTION_CHARGE,
+      course: {},
+      chapter: {},
     };
   },
   mounted: function () {
     // this.$parent.activeSidebar('business-section-sidebar');
     let _this = this;
     _this.$refs.pagination.size = 5;
+
+    let course = SessionStorage.get('course') || {};
+    let chapter = SessionStorage.get('chapter') || {};
+    if (Tool.isEmpty(course) || Tool.isEmpty(chapter)) {
+      _this.$router.push('/welcome');
+    }
+    _this.course = course;
+    _this.chapter = chapter;
     _this.list(1);
   },
   methods: {
@@ -181,6 +184,8 @@ export default {
         .post("http://127.0.0.1:9000/business/admin/section/list", {
           page: page,
           size: _this.$refs.pagination.size,
+          courseId: _this.course.id,
+          chapterId: _this.chapter.id
         })
         .then((response) => {
           Loading.hide();
@@ -201,6 +206,8 @@ export default {
       ) {
         return;
       }
+      _this.section.courseId = _this.course.id;
+      _this.section.chapterId = _this.chapter.id;
 
       Loading.show();
       _this.$ajax
