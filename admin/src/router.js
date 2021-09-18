@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Login from './view/login.vue'
 import Admin from './view/admin.vue'
 import Welcome from './view/admin/welcome.vue'
+import Category from './view/admin/category.vue'
 import Course from './view/admin/course.vue'
 import Chapter from './view/admin/chapter.vue'
 import Section from './view/admin/section.vue'
@@ -45,6 +46,11 @@ export default new Router({
                     path: 'business/section',
                     name: 'business/section',
                     component: Section
+                },
+                {
+                    path: 'business/category',
+                    name: 'business/category',
+                    component: Category
                 },
             ]
         }
