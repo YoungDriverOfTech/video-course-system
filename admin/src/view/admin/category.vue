@@ -4,9 +4,9 @@
       <!-- First Category -->
       <div class="col-md-6">
         <p>
-          <button v-on:click="add()" class="btn btn-white btn-default btn-round">
+          <button v-on:click="add1()" class="btn btn-white btn-default btn-round">
             <i class="ace-icon fa fa-edit"></i>
-            新增
+            新增一级分类
           </button>
           &nbsp;
           <button v-on:click="all()" class="btn btn-white btn-default btn-round">
@@ -49,18 +49,16 @@
       <!-- Second Category -->
       <div class="col-md-6">
         <p>
-          <button v-on:click="add()" class="btn btn-white btn-default btn-round">
+          <button v-on:click="add2()" class="btn btn-white btn-default btn-round">
             <i class="ace-icon fa fa-edit"></i>
-            新增
+            新增二级分类
           </button>
         </p>
-
 
         <table id="level2-table" class="table table-bordered table-hover">
           <thead>
             <tr>
               <th>id</th>
-              <th>parent id</th>
               <th>name</th>
               <th>sort</th>
               <th>操作</th>
@@ -70,7 +68,6 @@
           <tbody>
             <tr v-for="category in level2" v-bind:key="category.index">
                 <td>{{category.id}}</td>
-                <td>{{category.parent}}</td>
                 <td>{{category.name}}</td>
                 <td>{{category.sort}}</td>
               <td>
@@ -111,9 +108,9 @@
           <div class="modal-body">
             <form class="form-horizontal">
               <div class="form-group">
-                <label class="col-sm-2 control-label">parent id</label>
+                <label class="col-sm-2 control-label">父分类</label>
                 <div class="col-sm-10">
-                  <input v-model="category.parent" class="form-control">
+                  <p class="form-control-static">{{active.name || "无"}}</p>
                 </div>
               </div>
               <div class="form-group">
@@ -166,10 +163,27 @@ export default {
     _this.all();
   },
   methods: {
-    add() {
+
+    add1() {
       let _this = this;
-      _this.category = {};
+      _this.active = {};
+      _this.level2 = [];
+      _this.category = {
+        parent: '00000000'
+      };
       $("#add-category-modal-form").modal("show");
+    },
+
+    add2() {
+      let _this = this;
+      if (Tool.isEmpty(_this.active)) {
+        Toast.warning('Please select the first category');
+        return;
+      }
+      _this.category = {
+        parent: _this.active.id
+      };
+      $(".modal").modal("show");
     },
 
     edit(category) {
