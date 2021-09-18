@@ -23,6 +23,15 @@ public class CategoryService {
     @Resource
     private CategoryMapper categoryMapper;
 
+    public List<CategoryDto> all() {
+        CategoryExample categoryExample = new CategoryExample();
+        categoryExample.setOrderByClause("sort asc");
+        List<Category> categoryList = categoryMapper.selectByExample(categoryExample);
+
+        // transfer categoryList into categoryDtoList
+        return CopyUtil.copyList(categoryList, CategoryDto.class);
+    }
+
     public void list(PageDto<CategoryDto> pageDto) {
         // paging and select records
         PageHelper.startPage(pageDto.getPage(), pageDto.getSize());
