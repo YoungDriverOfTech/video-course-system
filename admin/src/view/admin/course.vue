@@ -42,7 +42,7 @@
             <p>
               <span class="badge badge-info">{{course.id}}</span>
               <span class="badge badge-info">sourt: {{course.sort}}</span>
-              <span class="badge badge-info">length: {{course.time}}</span>
+              <span class="badge badge-info">length: {{course.time | formatSecond}}</span>
             </p>
             <p>
               <button v-on:click="toChapter(course)" class="btn btn-white btn-xs btn-info btn-round">

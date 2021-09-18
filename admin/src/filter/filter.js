@@ -29,7 +29,39 @@ let optionKVArray = (list, key) =>  {
         return result;
     }
 };
+
+/**
+ * format time
+ * @param such as：36000
+ * @returns {string} such as：10:00:00
+ */
+ let formatSecond = (value) => {
+    value = value || 0;
+    let second = parseInt(value, 10); // second
+    let minute = 0; // minute
+    let hour = 0; // hour
+    if (second > 60) {
+        minute = Math.floor(second / 60);
+        second = Math.floor(second % 60);
+        if (minute > 60) {
+            hour = Math.floor(minute / 60);
+            minute = Math.floor(minute % 60);
+        }
+    }
+    let result = "" + PrefixInteger(second, 2) + "";
+    // 拼上分钟
+    result = "" + PrefixInteger(minute, 2) + ":" + result;
+    // 拼上小时
+    result = "" + PrefixInteger(hour, 2) + ":" + result;
+    return result;
+};
+
+function PrefixInteger(num, length) {
+    return (Array(length).join('0') + num).slice(-length);
+}
+
 export default {
     optionKV,
-    optionKVArray
+    optionKVArray,
+    formatSecond
 }
