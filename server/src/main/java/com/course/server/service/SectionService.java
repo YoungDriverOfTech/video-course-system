@@ -23,6 +23,10 @@ public class SectionService {
     @Resource
     private SectionMapper sectionMapper;
 
+    @Resource
+    private CourseService courseService;
+
+
     public void list(SectionPageDto sectionPageDto) {
         // paging and select records
         PageHelper.startPage(sectionPageDto.getPage(), sectionPageDto.getSize());
@@ -55,6 +59,9 @@ public class SectionService {
         } else {
             this.update(section);
         }
+
+        // update course time when section is added or updated
+        courseService.updateTime(section.getCourseId());
     }
 
     private void insert(Section section) {
