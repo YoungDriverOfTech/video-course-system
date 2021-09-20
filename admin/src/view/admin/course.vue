@@ -202,6 +202,7 @@ export default {
     add() {
       let _this = this;
       _this.course = {};
+      _this.tree.checkAllNodes(false);
       $("#add-course-modal-form").modal("show");
     },
 
@@ -210,6 +211,7 @@ export default {
       // using parameter course directly will afffect table displayed in page, thus make a deep copy for parameter course
       // $.extend(target, source);  this deep copy method is provided by jquery
       _this.course = $.extend({}, course);
+      _this.listCategory(course.id);
       $("#add-course-modal-form").modal("show");
     },
 
@@ -248,8 +250,6 @@ export default {
         return;
       }
       _this.course.categorys = categorys;
-
-      console.log(_this.course.categorys);
 
       Loading.show();
       _this.$ajax
@@ -326,7 +326,27 @@ export default {
       let zNodes = _this.categorys;
 
       _this.tree = $.fn.zTree.init($("#tree"), setting, zNodes);
-    }
+
+      // expand all category check nodes
+      _this.tree.expandAll(true);
+    },
+
+    listCategory(courseId) {
+      let _this = this;
+      Loading.show();
+      _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/list-category/' + courseId).then((res)=>{
+        Loading.hide();
+        let response = res.data;
+        let categorys = response.content;
+
+        // check all nodes which exists in db
+        _this.tree.checkAllNodes(false);
+        for (let i = 0; i < categorys.length; i++) {
+          let node = _this.tree.getNodeByParam("id", categorys[i].categoryId);
+          _this.tree.checkNode(node, true);
+        }
+      })
+    },
   },
 };
 </script>
