@@ -1,9 +1,12 @@
 package com.course.server.service;
 
+import com.course.server.domain.CourseContent;
+import com.course.server.dto.CourseContentDto;
 import com.course.server.dto.CourseDto;
 import com.course.server.domain.Course;
 import com.course.server.domain.CourseExample;
 import com.course.server.dto.PageDto;
+import com.course.server.mapper.CourseContentMapper;
 import com.course.server.mapper.CourseMapper;
 import com.course.server.mapper.my.MyCourseMapper;
 import com.course.server.util.CopyUtil;
@@ -36,6 +39,8 @@ public class CourseService {
     @Resource
     private CourseCategoryService courseCategoryService;
 
+    @Resource
+    private CourseContentMapper courseContentMapper;
 
     public void list(PageDto<CourseDto> pageDto) {
         // paging and select records
@@ -85,5 +90,22 @@ public class CourseService {
     public void updateTime(String courseId) {
         LOG.info("update course time length");
         myCourseMapper.updateTime(courseId);
+    }
+
+    public CourseContentDto findContent(String courseId) {
+        CourseContent content = courseContentMapper.selectByPrimaryKey(courseId);
+        if (content == null) {
+            return null;
+        }
+        return CopyUtil.copy(content, CourseContentDto.class);
+    }
+
+    public int saveContent(CourseContentDto contentDto) {
+        CourseContent content = CopyUtil.copy(contentDto, CourseContent.class);
+        int i = courseContentMapper.updateByPrimaryKeyWithBLOBs(content);
+        if (i == 0) {
+            i = courseContentMapper.insert(content);
+        }
+        return i;
     }
 }
