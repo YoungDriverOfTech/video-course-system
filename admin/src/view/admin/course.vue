@@ -49,7 +49,7 @@
                 Chapter
               </button>&nbsp;
               <button v-on:click="editContent(course)" class="btn btn-white btn-xs btn-info btn-round">
-                内容
+                content
               </button>&nbsp;
               <button v-on:click="edit(course)" class="btn btn-white btn-xs btn-info btn-round">
                 edit
@@ -180,10 +180,15 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">内容编辑</h4>
+            <h4 class="modal-title">edit course content</h4>
           </div>
           <div class="modal-body">
             <form class="form-horizontal">
+               <div class="form-group">
+                <div class="col-lg-12">
+                  {{saveContentLabel}}
+                </div>
+              </div>
               <div class="form-group">
                 <div class="col-lg-12">
                   <div id="content"></div>
@@ -220,7 +225,8 @@ export default {
       COURSE_CHARGE: COURSE_CHARGE,
       COURSE_STATUS: COURSE_STATUS,
       categorys: [],
-      tree: {}
+      tree: {},
+      saveContentLabel: "",
     };
   },
   mounted: function () {
@@ -393,6 +399,7 @@ export default {
 
       // clear history text
       $('#content').summernote('code', '');
+      _this.saveContentLabel = '';
       Loading.show();
 
       // get the course content by courseId
@@ -406,6 +413,17 @@ export default {
             if (resp.content) {
               $('#content').summernote('code', resp.content.content);
             }
+
+            // schedule auto save course content
+            let saveContentInterval = setInterval(() => {
+              _this.saveContent();
+            }, 5000);
+
+            // remove the auto save schedule when close edit dialog
+            $('#course-content-modal').on('hidden.bs.modal', function() {
+              clearInterval(saveContentInterval);
+            })
+
           } else {
             Toast.warning(resp.message);
           }
@@ -423,7 +441,8 @@ export default {
         Loading.hide();
         let resp = response.data;
         if (resp.success) {
-          Toast.success('content saved');
+          let now = Tool.dateFormat('mm:ss');
+          _this.saveContentLabel = 'last update time: ' + now;
         } else {
           Toast.warning(resp.message);
         }

@@ -49,9 +49,9 @@ let optionKVArray = (list, key) =>  {
         }
     }
     let result = "" + PrefixInteger(second, 2) + "";
-    // 拼上分钟
+    // append minute
     result = "" + PrefixInteger(minute, 2) + ":" + result;
-    // 拼上小时
+    // append hour
     result = "" + PrefixInteger(hour, 2) + ":" + result;
     return result;
 };
@@ -59,6 +59,7 @@ let optionKVArray = (list, key) =>  {
 function PrefixInteger(num, length) {
     return (Array(length).join('0') + num).slice(-length);
 }
+
 
 export default {
     optionKV,
