@@ -132,6 +132,14 @@ create table `course_category` (
   primary key (`id`)
 ) engine=innodb default charset=utf8mb4 comment='course category';
 
+--- course content
+drop table if exists `course_content`;
+create table `course_content` (
+  `id` char(8) not null default '' comment 'course id',
+  `content` mediumtext not null comment 'course content',
+  primary key (`id`)
+) engine=innodb default charset=utf8mb4 comment='course content';
+
 
 -----for test======
 drop table if exists `test`;
