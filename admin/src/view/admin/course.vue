@@ -82,6 +82,14 @@
           <div class="modal-body">
             <form class="form-horizontal">
               <div class="form-group">
+                <label class="col-sm-2 control-label">
+                  分类
+                </label>
+                <div class="col-sm-10">
+                  <ul id="tree" class="ztree"></ul>
+                </div>
+              </div>
+              <div class="form-group">
                 <label class="col-sm-2 control-label">name</label>
                 <div class="col-sm-10">
                   <input v-model="course.name" class="form-control">
@@ -185,6 +193,7 @@ export default {
     let _this = this;
     _this.$refs.pagination.size = 5;
     _this.list(1);
+    _this.initTree();
   },
   methods: {
     add() {
@@ -271,6 +280,37 @@ export default {
       let _this = this;
       SessionStorage.set('course', course);
       _this.$router.push('/business/chapter');
+    },
+
+    initTree() {
+      let setting = {
+        check: {
+          enable: true
+        },
+        data: {
+          simpleData: {
+            enable: true
+          }
+        }
+      };
+
+      let zNodes =[
+        { id:1, pId:0, name:"can check 1", open:true},
+        { id:11, pId:1, name:"can check 1-1", open:true},
+        { id:111, pId:11, name:"can check 1-1-1"},
+        { id:112, pId:11, name:"can check 1-1-2"},
+        { id:12, pId:1, name:"can check 1-2", open:true},
+        { id:121, pId:12, name:"can check 1-2-1"},
+        { id:122, pId:12, name:"can check 1-2-2"},
+        { id:2, pId:0, name:"can check 2", checked:true, open:true},
+        { id:21, pId:2, name:"can check 2-1"},
+        { id:22, pId:2, name:"can check 2-2", open:true},
+        { id:221, pId:22, name:"can check 2-2-1", checked:true},
+        { id:222, pId:22, name:"can check 2-2-2"},
+        { id:23, pId:2, name:"can check 2-3"}
+      ];
+
+      $.fn.zTree.init($("#tree"), setting, zNodes);
     }
   },
 };
