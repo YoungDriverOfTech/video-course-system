@@ -32,6 +32,9 @@ public class CourseService {
     @Resource
     private MyCourseMapper myCourseMapper;
 
+    @Resource
+    private CourseCategoryService courseCategoryService;
+
 
     public void list(PageDto<CourseDto> pageDto) {
         // paging and select records
@@ -52,17 +55,19 @@ public class CourseService {
     public void save(CourseDto courseDto) {
         Course course = CopyUtil.copy(courseDto, Course.class);
         if (StringUtils.isEmpty(course.getId())) {
+            course.setId(UuidUtil.getShortUuid());
             this.insert(course);
         } else {
             this.update(course);
         }
+
+        courseCategoryService.saveBatch(course.getId(), courseDto.getCategorys());
     }
 
     private void insert(Course course) {
         Date now = new Date();
         course.setCreatedAt(now);
         course.setUpdatedAt(now);
-        course.setId(UuidUtil.getShortUuid());
         courseMapper.insert(course);
     }
 
