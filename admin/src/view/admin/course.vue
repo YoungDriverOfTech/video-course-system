@@ -51,6 +51,9 @@
               <button v-on:click="editContent(course)" class="btn btn-white btn-xs btn-info btn-round">
                 content
               </button>&nbsp;
+              <button v-on:click="openSortModal(course)" class="btn btn-white btn-xs btn-info btn-round">
+                Order
+              </button>&nbsp;
               <button v-on:click="edit(course)" class="btn btn-white btn-xs btn-info btn-round">
                 edit
               </button>&nbsp;
@@ -155,7 +158,7 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label">sort order</label>
                 <div class="col-sm-10">
-                  <input v-model="course.sort" class="form-control">
+                  <input v-model="course.sort" class="form-control" disabled>
                 </div>
               </div>
             </form>
@@ -209,6 +212,47 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
+    <div id="course-sort-modal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Order</h4>
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label class="control-label col-lg-3">
+                  Current Order
+                </label>
+                <div class="col-lg-9">
+                  <input class="form-control" v-model="sort.oldSort" name="oldSort" disabled>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-lg-3">
+                  New Order
+                </label>
+                <div class="col-lg-9">
+                  <input class="form-control" v-model="sort.newSort" name="newSort">
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-white btn-default btn-round" data-dismiss="modal">
+              <i class="ace-icon fa fa-times"></i>
+              Cancle
+            </button>
+            <button type="button" class="btn btn-white btn-info btn-round" v-on:click="updateSort()">
+              <i class="ace-icon fa fa-plus blue"></i>
+              Update Order
+            </button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
   </div>
 </template>
 
@@ -227,6 +271,11 @@ export default {
       categorys: [],
       tree: {},
       saveContentLabel: "",
+      sort: {
+        id: '',
+        olsSort: 0,
+        newSort: 0
+      }
     };
   },
   mounted: function () {
@@ -240,7 +289,9 @@ export default {
   methods: {
     add() {
       let _this = this;
-      _this.course = {};
+      _this.course = {
+        sort: _this.$refs.pagination.total +1
+      };
       _this.tree.checkAllNodes(false);
       $("#add-course-modal-form").modal("show");
     },
@@ -447,6 +498,36 @@ export default {
           Toast.warning(resp.message);
         }
       });
+    },
+
+    openSortModal(course) {
+      let _this = this;
+      _this.sort = {
+        id: course.id,
+        oldSort: course.sort,
+        newSort: course.sort
+      };
+      $('#course-sort-modal').modal('show');
+    },
+
+    updateSort() {
+      let _this = this;
+      if (_this.sort.newSort === _this.sort.olsSort) {
+        Toast.warning('No change in sort')
+        return;
+      }
+      Loading.show();
+      _this.$ajax.post(process.env.VUE_APP_SERVER + "/business/admin/course/sort", _this.sort).then((res) => {
+          let response = res.data;
+
+          if (response.success) {
+            Toast.success("sort updated");
+            $("#course-sort-modal").modal("hide");
+            _this.list(1);
+          } else {
+            Toast.error("sort update fail");
+          }
+        });
     }
   },
 };
