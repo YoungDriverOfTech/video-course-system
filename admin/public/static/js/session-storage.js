@@ -1,3 +1,6 @@
+SESSION_KEY_COURSE = "SESSION_KEY_COURSE";
+SESSION_KEY_CHAPTER = "SESSION_KEY_CHAPTER";
+
 SessionStorage = {
     get: function(key) {
         let v = sessionStorage.getItem(key);

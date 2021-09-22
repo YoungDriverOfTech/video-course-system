@@ -136,7 +136,7 @@ export default {
     _this.$refs.pagination.size = 5;
 
     // request from course page, need to get couse infomation
-    let course = SessionStorage.get('course');
+    let course = SessionStorage.get(SESSION_KEY_COURSE);
     if (Tool.isEmpty(course)) {
       _this.$router.push('/welcome');
       return;
@@ -229,7 +229,7 @@ export default {
     // jump to section page
     toSection(chapter) {
       let _this = this;
-      SessionStorage.set('chapter', chapter);
+      SessionStorage.set(SESSION_KEY_CHAPTER, chapter);
       _this.$router.push('/business/section');
     }
   },
