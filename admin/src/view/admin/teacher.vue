@@ -21,7 +21,7 @@
     <table id="simple-table" class="table table-bordered table-hover">
       <thead>
         <tr>
-                  <th>id</th>
+          <th>id</th>
           <th>name</th>
           <th>nickname</th>
           <th>image</th>
