@@ -18,42 +18,50 @@
       v-bind:itemCount="8"
     ></pagination>
 
-    <table id="simple-table" class="table table-bordered table-hover">
-      <thead>
-        <tr>
-          <th>id</th>
-          <th>name</th>
-          <th>nickname</th>
-          <th>image</th>
-          <th>position</th>
-          <th>motto</th>
-          <th>intro</th>
-          <th>操作</th>
-        </tr>
-      </thead>
+    <div class="row">
+      <div v-for="teacher in teachers" v-bind:key='teacher.index' class="col-md-3 center">
+        <div>
+          <span class="profile-picture">
+            <img v-show="!teacher.image" class="editable img-responsive editable-click editable-empty" src="/ace/assets/images/avatars/profile-pic.jpg" v-bind:title="teacher.intro"/>
+            <img v-show="teacher.image" class="media-object" v-bind:src="teacher.image" v-bind:title="teacher.intro"/>
+          </span>
 
-      <tbody>
-        <tr v-for="teacher in teachers" v-bind:key="teacher.index">
-            <td>{{teacher.id}}</td>
-            <td>{{teacher.name}}</td>
-            <td>{{teacher.nickname}}</td>
-            <td>{{teacher.image}}</td>
-            <td>{{teacher.position}}</td>
-            <td>{{teacher.motto}}</td>
-            <td>{{teacher.intro}}</td>
-          <td>
-            <div class="hidden-sm hidden-xs btn-group">
-              <button v-on:click="edit(teacher)" class="btn btn-xs btn-info">
-                <i class="ace-icon fa fa-pencil bigger-120"></i>
-              </button>
-              <button v-on:click="del(teacher.id)" class="btn btn-xs btn-danger">
-                <i class="ace-icon fa fa-trash-o bigger-120"></i>
-              </button>
+          <div class="space-4"></div>
+
+          <div class="width-85 label label-info label-xlg arrowed-in arrowed-in-right">
+            <div class="inline position-relative">
+              <a href="javascript:;" class="user-title-label dropdown-toggle" data-toggle="dropdown">
+                <i class="ace-icon fa fa-circle light-green"></i>
+                &nbsp;
+                <span class="white">{{teacher.position}}</span>
+              </a>
             </div>
-          </td>
-          </tr>
-      </tbody>
-    </table>
+          </div>
+        </div>
+
+        <div class="space-6"></div>
+
+        <a href="javascript:;" class="text-info bigger-110" v-bind:title="teacher.motto">
+          <i class="ace-icon fa fa-user"></i>
+          {{teacher.name}}【{{teacher.nickname}}】
+        </a>
+
+        <div class="space-6"></div>
+
+        <div class="profile-social-links align-center">
+          <button v-on:click="edit(teacher)" class="btn btn-xs btn-info">
+            <i class="ace-icon fa fa-pencil bigger-120"></i>
+          </button>
+          &nbsp;
+          <button v-on:click="del(teacher.id)" class="btn btn-xs btn-danger">
+            <i class="ace-icon fa fa-trash-o bigger-120"></i>
+          </button>
+        </div>
+
+        <div class="hr hr16 dotted"></div>
+
+      </div>
+    </div>
 
     <div
       id="add-teacher-modal-form"
@@ -109,7 +117,7 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label">intro</label>
                 <div class="col-sm-10">
-                  <input v-model="teacher.intro" class="form-control">
+                  <textarea v-model="teacher.intro" class="form-control" rows="5"></textarea>
                 </div>
               </div>
             </form>
