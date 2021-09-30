@@ -99,7 +99,7 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label">image</label>
                 <div class="col-sm-10">
-                  <input v-model="teacher.image" class="form-control">
+                  <input type="file" v-on:change="uploadImage()" id="file-upload-input">
                 </div>
               </div>
               <div class="form-group">
@@ -236,6 +236,20 @@ export default {
             }
           });
         Toast.success("deleted");
+      });
+    },
+
+    uploadImage() {
+      let _this = this;
+      let formData = new window.FormData();
+      // key: 'file',   this name nust same with backend's parameter
+      formData.append('file', document.querySelector('#file-upload-input').files[0]);
+      
+      Loading.show();
+      _this.$ajax.post(process.env.VUE_APP_SERVER + '/file/admin/upload', formData).then(response => {
+        Loading.hide();
+        let resp = response.data;
+        console.log(resp);
       });
     },
   },
