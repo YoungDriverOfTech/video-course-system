@@ -242,7 +242,7 @@ export default {
     uploadImage() {
       let _this = this;
       let formData = new window.FormData();
-      // key: 'file',   this name nust same with backend's parameter
+      // key: 'file',   this name must same with backend's parameter
       formData.append('file', document.querySelector('#file-upload-input').files[0]);
       
       Loading.show();

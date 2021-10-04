@@ -27,7 +27,7 @@ public class UploadController {
         //  save file into local drive
         String fileName = file.getOriginalFilename();
         String key = UuidUtil.getShortUuid();
-        String fullPath = "D:/file/teacher/" + key + "-" + fileName;
+        String fullPath = "D:/file/course/teacher/" + key + "-" + fileName;
 
         File dest = new File(fullPath);
         file.transferTo(dest);
