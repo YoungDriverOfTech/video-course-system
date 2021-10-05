@@ -103,7 +103,7 @@
                     <i class="ace-icon fa fa-upload"></i>
                     Upload Icon
                   </button>
-                  <input class="hidden" type="file" v-on:change="uploadImage()" id="file-upload-input">
+                  <input class="hidden" type="file" ref="file" v-on:change="uploadImage()" id="file-upload-input">
                   <div v-show="teacher.image" class="row">
                     <div class="col-md-4">
                       <img v-bind:src="teacher.image" class="img-responsive">
@@ -251,8 +251,26 @@ export default {
     uploadImage() {
       let _this = this;
       let formData = new window.FormData();
+      let file = _this.$refs.file.files[0];
+
+      // judge file type
+      let suffixs = ['jpg', 'jpeg', 'png'];
+      let fileName = file.name;
+      let suffix = fileName.substring(fileName.lastIndexOf('.') +1, fileName.length).toLowerCase();
+        let validateSuffix = false;
+        for (let i = 0; i < suffixs.length; i++) {
+          if (suffixs[i].toLowerCase() === suffix) {
+            validateSuffix = true;
+            break;
+          }
+        }
+        if (!validateSuffix) {
+          Toast.warning("File type unsupported! Followings are allowed：" + suffixs.join(","));
+          return;
+        }
+
       // key: 'file',   this name must same with backend's parameter
-      formData.append('file', document.querySelector('#file-upload-input').files[0]);
+      formData.append('file', file);
       
       Loading.show();
       _this.$ajax.post(process.env.VUE_APP_SERVER + '/file/admin/upload', formData).then(response => {
