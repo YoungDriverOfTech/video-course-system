@@ -162,7 +162,7 @@ export default {
       let _this = this;
       Loading.show();
       _this.$ajax
-        .post("http://127.0.0.1:9000/file/admin/file/list", {
+        .post(process.env.VUE_APP_SERVER + "/file/admin/file/list", {
           page: page,
           size: _this.$refs.pagination.size,
         })
@@ -190,7 +190,7 @@ export default {
       Loading.show();
       _this.$ajax
         .post(
-          "http://127.0.0.1:9000/file/admin/file/save",
+          process.env.VUE_APP_SERVER + "/file/admin/file/save",
           _this.file
         )
         .then((response) => {
@@ -211,7 +211,7 @@ export default {
       Confirm.show("Please confirm your delete operation!", function () {
         Loading.show();
         _this.$ajax
-          .delete("http://127.0.0.1:9000/file/admin/file/delete/" + id)
+          .delete(process.env.VUE_APP_SERVER + "/file/admin/file/delete/" + id)
           .then((response) => {
             Loading.hide();
             let resp = response.data;
