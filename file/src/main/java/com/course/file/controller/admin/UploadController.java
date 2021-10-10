@@ -68,7 +68,8 @@ public class UploadController {
 
         LOG.info("Upload file end");
         ResponseDto<Object> responseDto = new ResponseDto<>();
-        responseDto.setContent(FILE_DOMAIN + path);
+        fileDto.setPath(FILE_DOMAIN + path);
+        responseDto.setContent(fileDto);
         return responseDto;
 
     }
