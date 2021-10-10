@@ -21,7 +21,7 @@ public class CourseContentFileController {
     @Resource
     private CourseContentFileService courseContentFileService;
 
-    @PostMapping("/list/{courseId}")
+    @GetMapping("/list/{courseId}")
     public ResponseDto<List<CourseContentFileDto>> list(@PathVariable String courseId) {
         ResponseDto<List<CourseContentFileDto>> responseDto = new ResponseDto<>();
         List<CourseContentFileDto> fileDtoList = courseContentFileService.list(courseId);

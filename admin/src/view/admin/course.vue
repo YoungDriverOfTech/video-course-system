@@ -59,7 +59,7 @@
               <button v-on:click="toChapter(course)" class="btn btn-white btn-xs btn-info btn-round">
                 Chapter
               </button>&nbsp;
-              <button v-on:click="editContent(course)" class="btn btn-white btn-xs btn-info btn-round">
+              <button v-on:click="toContent(course)" class="btn btn-white btn-xs btn-info btn-round">
                 content
               </button>&nbsp;
               <button v-on:click="openSortModal(course)" class="btn btn-white btn-xs btn-info btn-round">
@@ -206,71 +206,6 @@
     </div>
     <!-- /.modal -->
     
-    <div id="course-content-modal" class="modal fade" tabindex="-1" role="dialog" style="overflow:auto;">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">edit course content</h4>
-          </div>
-          <div class="modal-body">
-            <file v-bind:input-id="'content-file-upload'"
-                  v-bind:text="'上传文件1'"
-                  v-bind:suffixs="['jpg', 'jpeg', 'png', 'mp4']"
-                  v-bind:use="FILE_USE.COURSE.key"
-                  v-bind:after-upload="afterUploadContentFile"></file>
-            <br>
-            <table id="file-table" class="table  table-bordered table-hover">
-              <thead>
-              <tr>
-                <th>name</th>
-                <th>address</th>
-                <th>size</th>
-                <th>operation</th>
-              </tr>
-              </thead>
-
-              <tbody>
-              <tr v-for="f in files" v-bind:key="f.id">
-                <td>{{f.name}}</td>
-                <td>{{f.url}}</td>
-                <td>{{f.size | formatFileSize}}</td>
-                <td>
-                  <button v-on:click="delFile(f)" class="btn btn-white btn-xs btn-warning btn-round">
-                    <i class="ace-icon fa fa-times red2"></i>
-                    delete
-                  </button>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-            <form class="form-horizontal">
-               <div class="form-group">
-                <div class="col-lg-12">
-                  {{saveContentLabel}}
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-lg-12">
-                  <div id="content"></div>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-white btn-default btn-round" data-dismiss="modal">
-              <i class="ace-icon fa fa-times"></i>
-              Cancel
-            </button>
-            <button type="button" class="btn btn-white btn-info btn-round" v-on:click="saveContent()">
-              <i class="ace-icon fa fa-plus blue"></i>
-              Save
-            </button>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
     <div id="course-sort-modal" class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -337,7 +272,6 @@ export default {
         newSort: 0
       },
       teachers: [],
-      files: [],
     };
   },
   mounted: function () {
@@ -447,6 +381,12 @@ export default {
       _this.$router.push('/business/chapter');
     },
 
+    toContent(course) {
+      let _this = this;
+      SessionStorage.set(SESSION_KEY_COURSE, course);
+      _this.$router.push("/business/content");
+    },
+
     allCategory() {
       let _this = this;
       Loading.show();
@@ -501,71 +441,6 @@ export default {
       })
     },
 
-    // open the editor
-    editContent(course) {
-      let _this = this;
-      let id = course.id;
-      _this.course = course;
-      $('#content').summernote({
-        focus: true,
-        height: 300
-      });
-
-      // clear history text
-      $('#content').summernote('code', '');
-      _this.saveContentLabel = '';
-      Loading.show();
-
-      // get course content file
-      _this.listContentFiles();
-
-      // get the course content by courseId
-      _this.$ajax.get(process.env.VUE_APP_SERVER + '/business/admin/course/find-content/' + id)
-        .then((response) => {
-          Loading.hide();
-          let resp = response.data;
-
-          if (resp.success) {
-            $("#course-content-modal").modal({backdrop: 'static', keyboard: false});
-            if (resp.content) {
-              $('#content').summernote('code', resp.content.content);
-            }
-
-            // schedule auto save course content
-            let saveContentInterval = setInterval(() => {
-              _this.saveContent();
-            }, 5000);
-
-            // remove the auto save schedule when close edit dialog
-            $('#course-content-modal').on('hidden.bs.modal', function() {
-              clearInterval(saveContentInterval);
-            })
-
-          } else {
-            Toast.warning(resp.message);
-          }
-        });
-    },
-
-    // save content text
-    saveContent() {
-      let _this = this;
-      let content = $('#content').summernote('code');
-      _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/save-content', {
-        id: _this.course.id,
-        content: content
-      }).then(response => {
-        Loading.hide();
-        let resp = response.data;
-        if (resp.success) {
-          let now = Tool.dateFormat('mm:ss');
-          _this.saveContentLabel = 'last update time: ' + now;
-        } else {
-          Toast.warning(resp.message);
-        }
-      });
-    },
-
     openSortModal(course) {
       let _this = this;
       _this.sort = {
@@ -610,43 +485,6 @@ export default {
       let _this = this;
       let image = resp.content.path;
       _this.course.image = image;
-    },
-
-    listContentFiles() {
-      let _this = this;
-        _this.$ajax.get(process.env.VUE_APP_SERVER + '/business/admin/course-content-file/list/' + _this.course.id).then((response)=>{
-          let resp = response.data;
-          if (resp.success) {
-            _this.files = resp.content;
-          }
-        });
-    },
-
-    afterUploadContentFile(response) {
-      let _this = this;
-      let file = response.content;
-      file.courseId = _this.course.id;
-      file.url = file.path;
-      _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course-content-file/save', file).then((response)=>{
-        let resp = response.data;
-        if (resp.success) {
-          Toast.success("uploaded");
-          _this.files.push(resp.content);
-        }
-      });
-    },
-
-    delFile(f) {
-      let _this = this;
-      Confirm.show("This opertion is not revertable, sure to do it?", function () {
-        _this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/course-content-file/delete/' + f.id).then((response)=>{
-          let resp = response.data;
-          if (resp.success) {
-            Toast.success("deleted");
-            Tool.removeObj(_this.files, f);
-          }
-        });
-      });
     },
   },
 };

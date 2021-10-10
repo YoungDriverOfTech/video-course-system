@@ -58,7 +58,7 @@ let optionKVArray = (list, key) =>  {
 
 function PrefixInteger(num, length) {
     return (Array(length).join('0') + num).slice(-length);
-};
+}
 
 let formatFileSize = (value) => {
     value = value || 0;
