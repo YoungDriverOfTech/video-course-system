@@ -172,6 +172,12 @@ create table `file` (
   unique key `path_unique` (`path`)
 ) engine=innodb default charset=utf8mb4 comment='file';
 
+alter table `file` add column (`shard_index` int comment 'uploaded file section');
+alter table `file` add column (`shard_size` int comment 'file section size');
+alter table `file` add column (`shard_total` int comment 'total file section');
+alter table `file` add column (`key` varchar(32) comment 'file key');
+alter table `file` add unique key key_unique (`key`);
+
 
 -- course content file
 drop table if exists `course_content_file`;
