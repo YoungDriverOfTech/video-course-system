@@ -13,7 +13,7 @@
     name: 'big-file',
     props: {
       text: {
-        default: "上传大文件"
+        default: "upload-big-file"
       },
       inputId: {
         default: "file-upload"
@@ -44,7 +44,7 @@
         let key10 = parseInt(key, 16);
         let key62 = Tool._10to62(key10);
 
-        // 判断文件格式
+        // judege file type
         let suffixs = _this.suffixs;
         let fileName = file.name;
         let suffix = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length).toLowerCase();
@@ -56,37 +56,46 @@
           }
         }
         if (!validateSuffix) {
-          Toast.warning("文件格式不正确！只支持上传：" + suffixs.join(","));
+          Toast.warning("File type is now allowed, please upload just as follows：" + suffixs.join(","));
           $("#" + _this.inputId + "-input").val("");
           return;
         }
 
-        // 文件分片
-        let shardSize = 20 * 1024 * 1024;    //以20MB为一个分片
-        let shardIndex = 2;		//分片索引
-        let start = (shardIndex - 1) * shardSize;	//当前分片起始位置
-        let end = Math.min(file.size, start + shardSize); //当前分片结束位置
-        let fileShard = file.slice(start, end); //从文件中截取当前的分片数据
+        // file section
+        let shardSize = 20 * 1024 * 1024;    // unit 20MB
+        let shardIndex = 2;		// section index
+        let start = (shardIndex - 1) * shardSize;	// section start index
+        let end = Math.min(file.size, start + shardSize); // current section end index
+        let fileShard = file.slice(start, end); // current section contant
         let size = file.size;
-        let shardTotal = Math.ceil(size / shardSize); //总片数
+        let shardTotal = Math.ceil(size / shardSize); // total section number
 
-        // key："shard"必须和后端controller参数名一致
-        formData.append('shard', fileShard);
-        formData.append('shardIndex', shardIndex);
-        formData.append('shardSize', shardSize);
-        formData.append('shardTotal', shardTotal);
-        formData.append('use', _this.use);
-        formData.append('name', file.name);
-        formData.append('suffix', suffix);
-        formData.append('size', size);
-        formData.append('key', key62);
-        Loading.show();
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/file/admin/upload', formData).then((response)=>{
-          Loading.hide();
-          let resp = response.data;
-          _this.afterUpload(resp);
-          $("#" + _this.inputId + "-input").val("");
-        });
+        // parse file into base64 and transfer to backend
+        let fileReader = new FileReader();
+        fileReader.onload = e => {
+          let base64 = e .target.result;
+
+          let param = {
+            'shard': base64,
+            'shardIndex': shardIndex,
+            'shardSize': shardSize,
+            'shardTotal': shardTotal,
+            'use': _this.use,
+            'name': file.name,
+            'suffix': suffix,
+            'size': file.size,
+            'key': key62
+          };
+
+          Loading.show();
+          _this.$ajax.post(process.env.VUE_APP_SERVER + '/file/admin/upload', param).then((response)=>{
+            Loading.hide();
+            let resp = response.data;
+            _this.afterUpload(resp);
+            $("#" + _this.inputId + "-input").val("");
+          });
+        };
+        fileReader.readAsDataURL(fileShard);
       },
 
       selectFile () {

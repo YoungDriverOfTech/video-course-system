@@ -39,7 +39,7 @@ public class LogAspect {
         // log number
         MDC.put("UUID", UuidUtil.getShortUuid());
 
-        // 开始打印请求日志
+        // print request log
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         Signature signature = joinPoint.getSignature();
@@ -48,13 +48,13 @@ public class LogAspect {
         // log business operation
         String nameCn = "";
         if (name.contains("list") || name.contains("query")) {
-            nameCn = "查询";
+            nameCn = "select";
         } else if (name.contains("save")) {
-            nameCn = "保存";
+            nameCn = "save";
         } else if (name.contains("delete")) {
-            nameCn = "删除";
+            nameCn = "delete";
         } else {
-            nameCn = "操作";
+            nameCn = "update";
         }
 
         // get business name through reflection
@@ -90,11 +90,11 @@ public class LogAspect {
             arguments[i] = args[i];
         }
         // exclude private infomation
-        String[] excludeProperties = {};
+        String[] excludeProperties = {"shard"};
         PropertyPreFilters filters = new PropertyPreFilters();
         PropertyPreFilters.MySimplePropertyPreFilter excludefilter = filters.addFilter();
         excludefilter.addExcludes(excludeProperties);
-        LOG.info("request parameter: {}", JSONObject.toJSONString(arguments, excludefilter)); // 为空的会不打印，但是像图片等长字段也会打印
+        LOG.info("request parameter: {}", JSONObject.toJSONString(arguments, excludefilter));
     }
 
     @Around("controllerPointcut()")
@@ -102,7 +102,7 @@ public class LogAspect {
         long startTime = System.currentTimeMillis();
         Object result = proceedingJoinPoint.proceed();
         // 排除字段，敏感字段或太长的字段不显示
-        String[] excludeProperties = {"password"};
+        String[] excludeProperties = {"password", "shard"};
         PropertyPreFilters filters = new PropertyPreFilters();
         PropertyPreFilters.MySimplePropertyPreFilter excludefilter = filters.addFilter();
         excludefilter.addExcludes(excludeProperties);

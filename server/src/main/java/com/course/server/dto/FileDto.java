@@ -55,6 +55,8 @@ public class FileDto {
 
     private String key;
 
+    private String shard;
+
     public String getId() {
         return id;
     }
@@ -152,6 +154,14 @@ public class FileDto {
         this.key = key;
     }
 
+    public String getShard() {
+        return shard;
+    }
+
+    public void setShard(String shard) {
+        this.shard = shard;
+    }
+
     @Override
     public String toString() {
         return "FileDto{" +
@@ -167,6 +177,7 @@ public class FileDto {
                 ", shardSize=" + shardSize +
                 ", shardTotal=" + shardTotal +
                 ", key='" + key + '\'' +
+                ", shard='" + shard + '\'' +
                 '}';
     }
 }
