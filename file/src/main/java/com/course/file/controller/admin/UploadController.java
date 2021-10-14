@@ -36,7 +36,7 @@ public class UploadController {
     private FileService fileService;
 
     @RequestMapping("/upload")
-    public ResponseDto upload(@RequestBody FileDto fileDto) throws IOException {
+    public ResponseDto upload(@RequestBody FileDto fileDto) throws Exception {
         LOG.info("Upload file start");
         String use = fileDto.getUse();
         String key = fileDto.getKey();
@@ -59,10 +59,12 @@ public class UploadController {
                 .append(key)
                 .append(".")
                 .append(suffix)
+                .toString();
+        String localPath = new StringBuilder(path)
                 .append(".")
                 .append(fileDto.getShardIndex())
                 .toString();
-        String fullPath = FILE_PATH + path;
+        String fullPath = FILE_PATH + localPath;
 
         File dest = new File(fullPath);
         shard.transferTo(dest);
@@ -75,29 +77,31 @@ public class UploadController {
         ResponseDto<Object> responseDto = new ResponseDto<>();
         fileDto.setPath(FILE_DOMAIN + path);
         responseDto.setContent(fileDto);
-        return responseDto;
 
+        if (fileDto.getShardIndex() == fileDto.getShardTotal()) {
+            this.merge(fileDto);
+        }
+        return responseDto;
     }
 
-    @GetMapping("/merge")
-    public ResponseDto merge() throws Exception {
-        File newFile = new File(FILE_PATH + "course/111.mp4");
+    public void merge(FileDto fileDto) throws Exception {
+        LOG.info("merge start");
+        String path = fileDto.getPath();
+        path = path.replace(FILE_DOMAIN, "");
+        Integer shardTotal = fileDto.getShardTotal();
+        File newFile = new File(FILE_PATH + path);
         FileOutputStream outputStream = new FileOutputStream(newFile, true);
         FileInputStream fileInputStream = null; // partial file
         byte[] byt = new byte[10 * 1024 * 1024];
         int len;
 
         try {
-            // read first partial file
-            fileInputStream = new FileInputStream(new File(FILE_PATH +  "/course/Bc0SXtFn.blob"));
-            while ((len = fileInputStream.read(byt)) != -1) {
-                outputStream.write(byt, 0, len);
-            }
-
-            // read second partial file
-            fileInputStream = new FileInputStream(new File(FILE_PATH +  "/course/roQbPm2x.blob"));
-            while ((len = fileInputStream.read(byt)) != -1) {
-                outputStream.write(byt, 0, len);
+            for (int i = 0; i < shardTotal; i++) {
+                // read first section
+                fileInputStream = new FileInputStream(new File(FILE_PATH + path + "." + (i + 1)));
+                while ((len = fileInputStream.read(byt)) != -1) {
+                    outputStream.write(byt, 0, len);
+                }
             }
         } catch (IOException e) {
             LOG.error(e.toString());
@@ -112,8 +116,6 @@ public class UploadController {
                 LOG.error(e.toString());
             }
         }
-
-        ResponseDto responseDto = new ResponseDto();
-        return responseDto;
+        LOG.info("merge ended");
     }
 }
