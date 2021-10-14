@@ -117,5 +117,18 @@ public class UploadController {
             }
         }
         LOG.info("merge ended");
+
+        // let gc release the useless refs
+        System.gc();
+
+        // delete merged sections
+        LOG.info("delete section start");
+        for (int i = 0; i < shardTotal; i++) {
+            String filePath = FILE_PATH + path + "." + (i + 1);
+            File file = new File(filePath);
+            boolean result = file.delete();
+            LOG.info("delete{}，{}", filePath, result ? "success" : "failure");
+        }
+        LOG.info("delete end");
     }
 }

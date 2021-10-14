@@ -62,7 +62,7 @@
         }
 
         // file section
-        let shardSize = 20 * 1024 * 1024;    // unit 20MB
+        let shardSize = 5 * 1024 * 1024;    // unit 5MB
         let shardIndex = 1;		// section index
         let size = file.size;
         let shardTotal = Math.ceil(size / shardSize); // total section number
@@ -104,8 +104,8 @@
               _this.upload(param);
             } else {
               _this.afterUpload(resp);
+              $("#" + _this.inputId + "-input").val("");
             }
-            $("#" + _this.inputId + "-input").val("");
           });
         };
         fileReader.readAsDataURL(fileShard);
