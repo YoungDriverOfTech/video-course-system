@@ -90,6 +90,11 @@
             if (!obj) {
               param.shardIndex = 1;
               _this.upload(param);
+            } else if (obj.shardIndex === obj.shardTotal) {
+              // uploaded section muber == total section number, which means upload is all finished and there is no need to upload again
+              Toast.success("File uploaded seccess");
+              _this.afterUpload(resp);
+              $("#" + _this.inputId + "-input").val("");
             } else {
               param.shardIndex = obj.shardIndex + 1;
               _this.upload(param);

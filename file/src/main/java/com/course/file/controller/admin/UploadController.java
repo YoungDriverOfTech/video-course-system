@@ -120,6 +120,7 @@ public class UploadController {
 
         // let gc release the useless refs
         System.gc();
+        Thread.sleep(100);
 
         // delete merged sections
         LOG.info("delete section start");
@@ -137,6 +138,9 @@ public class UploadController {
         LOG.info("check section start {}", key);
         ResponseDto<Object> responseDto = new ResponseDto<>();
         FileDto fileDto = fileService.findByKey(key);
+        if (fileDto != null) {
+            fileDto.setPath(FILE_DOMAIN +fileDto.getPath());
+        }
         responseDto.setContent(fileDto);
         return responseDto;
     }
