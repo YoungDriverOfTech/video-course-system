@@ -131,4 +131,13 @@ public class UploadController {
         }
         LOG.info("delete end");
     }
+
+    @GetMapping("/check/{key}")
+    public ResponseDto check(@PathVariable String key) {
+        LOG.info("check section start {}", key);
+        ResponseDto<Object> responseDto = new ResponseDto<>();
+        FileDto fileDto = fileService.findByKey(key);
+        responseDto.setContent(fileDto);
+        return responseDto;
+    }
 }

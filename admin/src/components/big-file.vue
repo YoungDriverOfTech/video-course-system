@@ -62,7 +62,7 @@
         }
 
         // file section
-        let shardSize = 5 * 1024 * 1024;    // unit 5MB
+        let shardSize = 10 * 1024 * 1024;    // unit 10MB
         let shardIndex = 1;		// section index
         let size = file.size;
         let shardTotal = Math.ceil(size / shardSize); // total section number
@@ -78,10 +78,30 @@
           'key': key62
         };
 
-        _this.upload(param);
+        _this.check(param);
       },  
 
-      upload() {
+      check(param) {
+        let _this = this;
+        _this.$ajax.get(process.env.VUE_APP_SERVER + '/file/admin/check/' + param.key).then((response)=>{
+          let resp = response.data;
+          if (resp.success) {
+            let obj = resp.content;
+            if (!obj) {
+              param.shardIndex = 1;
+              _this.upload(param);
+            } else {
+              param.shardIndex = obj.shardIndex + 1;
+              _this.upload(param);
+            }
+          } else {
+            Toast.warning('upload failed');
+            $("#" + _this.inputId + "-input").val("");
+          }
+        })
+      },
+
+      upload(param) {
         let _this = this;
         let shardIndex = param.shardIndex;
         let shardTotal = param.shardTotal;
@@ -111,7 +131,7 @@
         fileReader.readAsDataURL(fileShard);
       },
 
-      getFileSHard() {
+      getFileSHard(shardIndex, shardSize) {
         let _this = this;
         let file = _this.$refs.file.files[0];
         let start = (shardIndex - 1) * shardSize; // current section start index
