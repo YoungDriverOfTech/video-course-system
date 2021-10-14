@@ -36,11 +36,10 @@
     methods: {
       uploadFile () {
         let _this = this;
-        let formData = new window.FormData();
         let file = _this.$refs.file.files[0];
 
         // generate file key that is used to mark whether some sections belongs to one file
-        let key = hex_md5(file);
+        let key = hex_md5(file.name + file.size + file.type);
         let key10 = parseInt(key, 16);
         let key62 = Tool._10to62(key10);
 
