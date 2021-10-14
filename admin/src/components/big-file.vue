@@ -112,22 +112,23 @@
         let shardTotal = param.shardTotal;
         let shardSize = param.shardSize;
         let fileShard = _this.getFileShard(shardIndex, shardSize);
-
         // parse file into base64 and transfer to backend
         let fileReader = new FIleReader();
+
+        Progress.show(parseInt((shardIndex - 1) * 100 / shardTotal));
         fileReader.onload = e => {
           let base64 = e.target.result;
           param.shard = base64;
 
-          Loading.show();
           _this.$ajax.post(process.env.VUE_APP_SERVER + '/file/admin/upload', param).then((response) => {
-            Loading.hide();
             let resp = response.data;
+            Progress.show(parseInt(shardIndex * 100 / shardTotal));
             if (shardIndex < shardTotal) {
               // upload next section
               param.shardIndex = param.shardIndex + 1;
               _this.upload(param);
             } else {
+              Progress.hide();
               _this.afterUpload(resp);
               $("#" + _this.inputId + "-input").val("");
             }
