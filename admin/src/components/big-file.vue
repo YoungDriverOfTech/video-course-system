@@ -63,39 +63,61 @@
 
         // file section
         let shardSize = 20 * 1024 * 1024;    // unit 20MB
-        let shardIndex = 2;		// section index
-        let start = (shardIndex - 1) * shardSize;	// section start index
-        let end = Math.min(file.size, start + shardSize); // current section end index
-        let fileShard = file.slice(start, end); // current section contant
+        let shardIndex = 1;		// section index
         let size = file.size;
         let shardTotal = Math.ceil(size / shardSize); // total section number
 
-        // parse file into base64 and transfer to backend
-        let fileReader = new FileReader();
-        fileReader.onload = e => {
-          let base64 = e .target.result;
+        let param = {
+          'shardIndex': shardIndex,
+          'shardSize': shardSize,
+          'shardTotal': shardTotal,
+          'use': _this.use,
+          'name': file.name,
+          'suffix': suffix,
+          'size': file.size,
+          'key': key62
+        };
 
-          let param = {
-            'shard': base64,
-            'shardIndex': shardIndex,
-            'shardSize': shardSize,
-            'shardTotal': shardTotal,
-            'use': _this.use,
-            'name': file.name,
-            'suffix': suffix,
-            'size': file.size,
-            'key': key62
-          };
+        _this.upload(param);
+      },  
+
+      upload() {
+        let _this = this;
+        let shardIndex = param.shardIndex;
+        let shardTotal = param.shardTotal;
+        let shardSize = param.shardSize;
+        let fileShard = _this.getFileShard(shardIndex, shardSize);
+
+        // parse file into base64 and transfer to backend
+        let fileReader = new FIleReader();
+        fileReader.onload = e => {
+          let base64 = e.target.result;
+          param.shard = base64;
 
           Loading.show();
-          _this.$ajax.post(process.env.VUE_APP_SERVER + '/file/admin/upload', param).then((response)=>{
+          _this.$ajax.post(process.env.VUE_APP_SERVER + '/file/admin/upload', param).then((response) => {
             Loading.hide();
             let resp = response.data;
-            _this.afterUpload(resp);
+            if (shardIndex < shardTotal) {
+              // upload next section
+              param.shardIndex = param.shardIndex + 1;
+              _this.upload(param);
+            } else {
+              _this.afterUpload(resp);
+            }
             $("#" + _this.inputId + "-input").val("");
           });
         };
         fileReader.readAsDataURL(fileShard);
+      },
+
+      getFileSHard() {
+        let _this = this;
+        let file = _this.$refs.file.files[0];
+        let start = (shardIndex - 1) * shardSize; // current section start index
+        let end = Math.min(file.size, start + shardSize); // current section end index
+        let fileShard = file.slice(start, end); // extract current sction content
+        return fileShard;
       },
 
       selectFile () {
