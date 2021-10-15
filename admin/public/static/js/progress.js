@@ -22,7 +22,7 @@ Progress = {
       $("#progress-div").remove();
       $("body").append(progressDiv);
 
-      // 背景遮罩
+      // overlay
       $("body").append($("<div id=\"progress-overlay\" style=\"z-index: 10010;\n" +
         "  border: none;\n" +
         "  margin: 0px;\n" +

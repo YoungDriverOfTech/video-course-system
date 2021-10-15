@@ -112,7 +112,7 @@
         let shardSize = param.shardSize;
         let fileShard = _this.getFileShard(shardIndex, shardSize);
         // parse file into base64 and transfer to backend
-        let fileReader = new FIleReader();
+        let fileReader = new FileReader();
 
         Progress.show(parseInt((shardIndex - 1) * 100 / shardTotal));
         fileReader.onload = e => {
@@ -136,7 +136,7 @@
         fileReader.readAsDataURL(fileShard);
       },
 
-      getFileSHard(shardIndex, shardSize) {
+      getFileShard(shardIndex, shardSize) {
         let _this = this;
         let file = _this.$refs.file.files[0];
         let start = (shardIndex - 1) * shardSize; // current section start index
