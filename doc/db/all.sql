@@ -190,6 +190,19 @@ create table `course_content_file` (
   primary key (`id`)
 ) engine=innodb default charset=utf8mb4 comment='course content file';
 
+-- user
+drop table if exists `user`;
+create table `user` (
+  `id` char(8) not null default '' comment 'id',
+  `login_name` varchar(50) not null comment 'login name',
+  `name` varchar(50) comment 'nick name',
+  `password` char(32) not null comment 'password',
+  primary key (`id`),
+  unique key `login_name_unique` (`login_name`)
+) engine=innodb default charset=utf8mb4 comment='user';
+
+insert into `user` (id, login_name, name, password) values ('10000000', 'test', '测试', '202cb962ac59075b964b07152d234b70');
+
 
 -----for test======
 drop table if exists `test`;
