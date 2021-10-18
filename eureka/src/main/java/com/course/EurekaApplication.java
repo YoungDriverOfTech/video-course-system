@@ -17,7 +17,7 @@ public class EurekaApplication {
 		SpringApplication app = new SpringApplication(EurekaApplication.class);
 		Environment env = app.run(args).getEnvironment();
 		LOG.info("Eureka Server start success！！");
-		LOG.info("Eureka Address: \thttp://127.0.0.1:{}", env.getProperty("server.port"));
+		LOG.info("Eureka Address: \thttp://127.0.0.1:G{}", env.getProperty("server.port"));
 	}
 
 }

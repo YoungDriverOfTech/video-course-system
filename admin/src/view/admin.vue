@@ -456,11 +456,11 @@
             <b class="arrow"></b>
 
             <ul class="submenu">
-              <li class="">
-                <a href="tables.html">
+              <li class="active" id="system-user-sidebar">
+                <router-link to="/system/user">
                   <i class="menu-icon fa fa-caret-right"></i>
                   用户管理
-                </a>
+                </router-link>
 
                 <b class="arrow"></b>
               </li>
@@ -601,13 +601,8 @@ export default {
   methods: {
     activeSidebar: function (id) {
       // remove siblings's active class, and add self a actice class
-      $("#" + id)
-        .siblings()
-        .removeClass("active");
-      $("#" + id)
-        .siblings()
-        .find("li")
-        .removeClass("active");
+      $("#" + id).siblings().removeClass("active");
+      $("#" + id).siblings().find("li").removeClass("active");
       $("#" + id).addClass("active");
 
       // remove parent siblings active class and add current element parent a active class
