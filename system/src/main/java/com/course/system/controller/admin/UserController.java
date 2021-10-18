@@ -7,6 +7,7 @@ import com.course.server.service.UserService;
 import com.course.server.util.ValidatorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -34,6 +35,7 @@ public class UserController {
     public ResponseDto<UserDto> save(@RequestBody UserDto userDto) {
         LOG.info("userDto: {}", userDto);
 
+        userDto.setPassword(DigestUtils.md5DigestAsHex(userDto.getPassword().getBytes()));
         // check operation
         ValidatorUtil.require(userDto.getLoginName(), "login name");
         ValidatorUtil.length(userDto.getLoginName(), "login name", 1, 50);
