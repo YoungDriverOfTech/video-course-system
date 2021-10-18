@@ -584,6 +584,7 @@ export default {
     $("body").attr("class", "no-skin");
     // initiate sidebar css
     _this.activeSidebar(_this.$route.name.replace("/", "-") + "-sidebar");
+    $.getScript('/ace/assets/js/ace.min.js');
   },
 
   watch: {
