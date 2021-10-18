@@ -73,5 +73,13 @@ Tool = {
       arr.unshift(chars[mod]);
     } while (number);
     return arr.join('');
+  },
+
+  setLoginUser: function(loginUser) {
+    sessionStorage.set(SESSION_KEY_LOGIN_USER, loginUser);
+  },
+
+  getLoginUser: function() {
+    return SessionStorage.get(SESSION_KEY_LOGIN_USER) || {};
   }
 };
