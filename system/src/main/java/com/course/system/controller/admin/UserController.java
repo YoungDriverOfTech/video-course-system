@@ -56,4 +56,13 @@ public class UserController {
         userService.delete(id);
         return responseDto;
     }
+
+    @PostMapping("/save-password")
+    public ResponseDto<Object> savePassword(@RequestBody UserDto userDto) {
+        userDto.setPassword(DigestUtils.md5DigestAsHex(userDto.getPassword().getBytes()));
+        ResponseDto<Object> responseDto = new ResponseDto<>();
+        userService.savePassword(userDto);
+        responseDto.setContent(userDto);
+        return responseDto;
+    }
 }

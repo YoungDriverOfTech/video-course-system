@@ -37,6 +37,9 @@
             <td>{{user.password}}</td>
           <td>
             <div class="hidden-sm hidden-xs btn-group">
+              <button v-on:click="editPassword(user)" class="btn btn-xs btn-info">
+                <i class="ace-icon fa fa-key bigger-120"></i>
+              </button>
               <button v-on:click="edit(user)" class="btn btn-xs btn-info">
                 <i class="ace-icon fa fa-pencil bigger-120"></i>
               </button>
@@ -82,10 +85,10 @@
                   <input v-model="user.name" class="form-control">
                 </div>
               </div>
-              <div class="form-group">
+              <div v-show="!user.id" class="form-group">
                 <label class="col-sm-2 control-label">password</label>
                 <div class="col-sm-10">
-                  <input v-model="user.password" class="form-control">
+                  <input v-model="user.password" type="password" class="form-control">
                 </div>
               </div>
             </form>
@@ -104,6 +107,37 @@
       <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
+
+    <div id="edit-password-modal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Update Password</h4>
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label class="control-label col-sm-2">Password</label>
+                <div class="col-sm-10">
+                  <input class="form-control" type="password" v-model="user.password" name="password">
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-white btn-default btn-round" data-dismiss="modal">
+              <i class="ace-icon fa fa-times"></i>
+              Cancel
+            </button>
+            <button type="button" class="btn btn-white btn-info btn-round" v-on:click="savePassword()">
+              <i class="ace-icon fa fa-plus blue"></i>
+              Save
+            </button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
   </div>
 </template>
 
@@ -203,6 +237,32 @@ export default {
           });
         Toast.success("deleted");
       });
+    },
+
+    // click update password
+    editPassword(user) {
+      let _this = this;
+      _this.user = $.extend({}, user);
+      _this.user.password = null;
+      $("#edit-password-modal").modal("show");
+    },
+
+    // click save password
+    savePassword() {
+      let _this = this;
+      _this.user.password = hex_md5(_this.user.password + KEY);
+      Loading.show();
+      _this.$ajax.post(process.env.VUE_APP_SERVER + '/system/admin/user/save-password', _this.user).then((response)=>{
+        Loading.hide();
+        let resp = response.data;
+        if (resp.success) {
+          $("#edit-password-modal").modal("hide");
+          _this.list(1);
+          Toast.success("saved");
+        } else {
+          Toast.warning(resp.message)
+        }
+      })
     },
   },
 };
