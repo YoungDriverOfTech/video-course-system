@@ -76,7 +76,7 @@ Tool = {
   },
 
   setLoginUser: function(loginUser) {
-    sessionStorage.set(SESSION_KEY_LOGIN_USER, loginUser);
+    SessionStorage.set(SESSION_KEY_LOGIN_USER, loginUser);
   },
 
   getLoginUser: function() {

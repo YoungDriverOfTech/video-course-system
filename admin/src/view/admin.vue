@@ -380,7 +380,7 @@
                 <li class="divider"></li>
 
                 <li>
-                  <a href="#">
+                  <a v-on:click='logout()' href="#">
                     <i class="ace-icon fa fa-power-off"></i>
                     Logout
                   </a>
@@ -430,7 +430,7 @@
           <li class="" id="welcome-sidebar">
             <router-link to="/welcome">
               <i class="menu-icon fa fa-tachometer"></i>
-              <span class="menu-text"> 欢迎：{{loginUser.name}}  </span>
+              <span class="menu-text"> 欢迎：{{loginUser.loginName}}  </span>
             </router-link>
 
             <b class="arrow"></b>
@@ -583,6 +583,7 @@ export default {
     $.getScript('/ace/assets/js/ace.min.js');
 
     _this.loginUser = Tool.getLoginUser();
+    console.log(_this.loginUser);
   },
 
   watch: {
@@ -611,6 +612,21 @@ export default {
         parentLi.siblings().find("li").removeClass("active")
         parentLi.addClass("open active");
       }
+    },
+
+    logout () {
+      let _this = this;
+      Loading.show();
+      _this.$ajax.get(process.env.VUE_APP_SERVER + '/system/admin/user/logout').then((response)=>{
+        Loading.hide();
+        let resp = response.data;
+        if (resp.success) {
+          Tool.setLoginUser(null);
+          _this.$router.push("/login")
+        } else {
+          Toast.warning(resp.message)
+        }
+      });
     },
   },
 };
