@@ -27,6 +27,24 @@ Object.keys(filter).forEach(key => {
   Vue.filter(key, filter[key]);
 });
 
+
+// router filter
+router.beforeEach((to, from, next) => {
+  // check meta.loginRequire attribute
+  if (to.matched.some(function(item){
+    return item.meta.loginRequire
+  })) {
+    let loginUser = Tool.getLoginUser();
+    if (Tool.isEmpty(loginUser)) {
+      next('/login');
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
 new Vue({
   router,
   render: h => h(App),
