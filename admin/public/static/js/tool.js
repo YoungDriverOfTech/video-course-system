@@ -81,5 +81,18 @@ Tool = {
 
   getLoginUser: function() {
     return SessionStorage.get(SESSION_KEY_LOGIN_USER) || {};
+  },
+
+  // generate random number
+  uuid: function (len, radix) {
+    let chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+    let uuid = [];
+    radix = radix || chars.length;
+  
+    for (let i = 0; i < len; i++) {
+      uuid[i] = chars[0 | Math.random() * radix];
+    }
+  
+    return uuid.join('');
   }
 };

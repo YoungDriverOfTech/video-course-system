@@ -3,6 +3,7 @@ package com.course.system.controller.admin;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +23,7 @@ public class KaptchaController {
     @Autowired
     DefaultKaptcha defaultKaptcha;
 
+    @GetMapping("/image-code/{imageCodeToken}")
     public void imageCode(@PathVariable(value = "imageCodeToken") String imageCodeToken,
                           HttpServletRequest request,
                           HttpServletResponse response) throws Exception {
