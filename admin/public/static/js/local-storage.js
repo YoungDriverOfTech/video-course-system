@@ -1,6 +1,6 @@
 LOCAL_KEY_REMEMBER_USER = "LOCAL_KEY_REMEMBER_USER";
 
-localStorage = {
+LocalStorage = {
     get: function(key) {
         let v = localStorage.getItem(key);
         if (v && typeof(v) !== 'undefined' && v !== undefined) {

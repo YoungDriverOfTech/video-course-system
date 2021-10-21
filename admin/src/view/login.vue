@@ -99,7 +99,7 @@ export default {
       $('body').attr('class', 'login-layout light-login');
 
       // get username and password from localstorage if exist
-      let rememberUser = localStorage.get(LOCAL_KEY_REMEMBER_USER);
+      let rememberUser = LocalStorage.get(LOCAL_KEY_REMEMBER_USER);
       if (rememberUser) {
         _this.user = rememberUser;
       }
