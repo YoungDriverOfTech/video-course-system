@@ -14,7 +14,7 @@ Tool = {
      * not empty check
      */
     isNotEmpty: function (obj) {
-      return !this.isEmpty();
+      return !this.isEmpty(obj);
     },
   
     /**
