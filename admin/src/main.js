@@ -7,6 +7,9 @@ import filter from './filter/filter'
 Vue.config.productionTip = false
 Vue.prototype.$ajax = axios;
 
+// let session keep available both in frontend and
+axios.defaults.withCredentials = true;
+
 /**
  * axios interceptor
  */

@@ -34,7 +34,7 @@ public class KaptchaController {
 
             // set createText into session for certificating
             request.getSession().setAttribute(imageCodeToken, createText);
-
+            System.out.println("sessionId: " + request.getSession().getId());
             // generate certification picture through createText
             BufferedImage challenge = defaultKaptcha.createImage(createText);
             ImageIO.write(challenge, "jpg", jpegOutputStream);

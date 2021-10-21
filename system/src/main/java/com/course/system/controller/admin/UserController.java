@@ -6,6 +6,7 @@ import com.course.server.util.ValidatorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.DigestUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -69,6 +70,24 @@ public class UserController {
     public ResponseDto<LoginUserDto> login(@RequestBody UserDto userDto, HttpServletRequest request) {
         userDto.setPassword(DigestUtils.md5DigestAsHex(userDto.getPassword().getBytes()));
         ResponseDto<LoginUserDto> responseDto = new ResponseDto<>();
+
+        System.out.println("sessionId: " + request.getSession().getId());
+        // check whether token is same between session and parameter
+        String imageCode = (String) request.getSession().getAttribute(userDto.getImageCodeToken());
+        if (StringUtils.isEmpty(imageCode)) {
+            responseDto.setSuccess(false);
+            responseDto.setMessage("token expire");
+            return responseDto;
+        }
+        if (!imageCode.toLowerCase().equals(userDto.getImageCode().toLowerCase())) {
+            responseDto.setSuccess(false);
+            responseDto.setMessage("certification is wrong");
+            return responseDto;
+        } else {
+            // remove token after check passing
+            request.getSession().removeAttribute(userDto.getImageCodeToken());
+        }
+
         LoginUserDto loginUserDto = userService.login(userDto);
         request.getSession().setAttribute(Constants.LOGIN_USER, loginUserDto);
         responseDto.setContent(loginUserDto);

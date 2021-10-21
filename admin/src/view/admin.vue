@@ -583,7 +583,6 @@ export default {
     $.getScript('/ace/assets/js/ace.min.js');
 
     _this.loginUser = Tool.getLoginUser();
-    console.log(_this.loginUser);
   },
 
   watch: {
