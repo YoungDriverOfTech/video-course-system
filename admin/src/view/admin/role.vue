@@ -241,6 +241,7 @@ export default {
         let response = res.data;
         _this.resources = response.content;
         _this.initTree();
+        _this.listRoleResource();
       })
     },
 
@@ -282,6 +283,20 @@ export default {
           Toast.success("saved");
         } else {
           Toast.warning(resp.message);
+        }
+      });
+    },
+
+    listRoleResource() {
+      let _this = this;
+      _this.$ajax.get(process.env.VUE_APP_SERVER + '/system/admin/role/list-resource/' + _this.role.id).then((response)=>{
+        let resp = response.data;
+        let resources = resp.content;
+
+        _this.zTree.checkAllNodes(false);
+        for (let i = 0; i < resources.length; i++) {
+          let node = _this.zTree.getNodeByParam("id", resources[i]);
+          _this.zTree.checkNode(node, true);
         }
       });
     },

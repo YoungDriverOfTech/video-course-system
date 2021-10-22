@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -82,5 +83,16 @@ public class RoleService {
             roleResource.setResourceId(resourceId);
             roleResourceMapper.insert(roleResource);
         }
+    }
+
+    public List<String> listResource(String roleId) {
+        RoleResourceExample example = new RoleResourceExample();
+        example.createCriteria().andRoleIdEqualTo(roleId);
+        List<RoleResource> roleResourceList = roleResourceMapper.selectByExample(example);
+        List<String> resourceIdList = new ArrayList<>();
+        for (RoleResource roleResource : roleResourceList) {
+            resourceIdList.add(roleResource.getResourceId());
+        }
+        return resourceIdList;
     }
 }

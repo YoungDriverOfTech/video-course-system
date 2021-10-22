@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/role")
@@ -60,6 +61,14 @@ public class RoleController {
         ResponseDto<RoleDto> responseDto = new ResponseDto<>();
         roleService.saveResource(roleDto);
         responseDto.setContent(roleDto);
+        return responseDto;
+    }
+
+    @GetMapping("/list-resource/{roleId}")
+    public ResponseDto<List<String>> listResource(@PathVariable String roleId) {
+        ResponseDto<List<String>> responseDto = new ResponseDto<>();
+        List<String> resourceIdList = roleService.listResource(roleId);
+        responseDto.setContent(resourceIdList);
         return responseDto;
     }
 }
