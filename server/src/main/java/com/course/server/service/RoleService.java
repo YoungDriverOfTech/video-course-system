@@ -1,20 +1,22 @@
 package com.course.server.service;
 
-import com.course.server.dto.RoleDto;
 import com.course.server.domain.Role;
 import com.course.server.domain.RoleExample;
+import com.course.server.domain.RoleResource;
+import com.course.server.domain.RoleResourceExample;
 import com.course.server.dto.PageDto;
+import com.course.server.dto.RoleDto;
 import com.course.server.mapper.RoleMapper;
+import com.course.server.mapper.RoleResourceMapper;
 import com.course.server.util.CopyUtil;
 import com.course.server.util.UuidUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,6 +24,9 @@ public class RoleService {
 
     @Resource
     private RoleMapper roleMapper;
+
+    @Resource
+    private RoleResourceMapper roleResourceMapper;
 
     public void list(PageDto<RoleDto> pageDto) {
         // paging and select records
@@ -58,5 +63,24 @@ public class RoleService {
 
     public void delete(String id) {
         roleMapper.deleteByPrimaryKey(id);
+    }
+
+    @Transactional
+    public void saveResource(RoleDto roleDto) {
+        String roleId = roleDto.getId();
+        List<String> resourceIds = roleDto.getResourceIds();
+        // delete all relationship according to role id
+        RoleResourceExample example = new RoleResourceExample();
+        example.createCriteria().andRoleIdEqualTo(roleId);
+        roleResourceMapper.deleteByExample(example);
+
+        // save role and corresponding resources
+        for (String resourceId : resourceIds) {
+            RoleResource roleResource = new RoleResource();
+            roleResource.setId(UuidUtil.getShortUuid());
+            roleResource.setRoleId(roleId);
+            roleResource.setResourceId(resourceId);
+            roleResourceMapper.insert(roleResource);
+        }
     }
 }

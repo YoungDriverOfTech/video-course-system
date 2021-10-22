@@ -1,4 +1,4 @@
-package com.course.business.controller.admin;
+package com.course.system.controller.admin;
 
 import com.course.server.dto.RoleDto;
 import com.course.server.dto.PageDto;
@@ -52,6 +52,14 @@ public class RoleController {
         LOG.info("id: {}", id);
         ResponseDto<RoleDto> responseDto = new ResponseDto<>();
         roleService.delete(id);
+        return responseDto;
+    }
+
+    @PostMapping("/save-resource")
+    public ResponseDto<RoleDto> saveResource(@RequestBody RoleDto roleDto) {
+        ResponseDto<RoleDto> responseDto = new ResponseDto<>();
+        roleService.saveResource(roleDto);
+        responseDto.setContent(roleDto);
         return responseDto;
     }
 }

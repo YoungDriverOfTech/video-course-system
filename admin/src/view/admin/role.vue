@@ -263,6 +263,28 @@ export default {
       _this.zTree = $.fn.zTree.init($("#tree"), setting, _this.resources);
       _this.zTree.expandAll(true);
     },
+
+    saveResource() {
+      let _this = this;
+      let resources = _this.zTree.getCheckedNodes();
+
+      let resourceIds = [];
+      for (let i = 0; i < resources.length; i++) {
+        resourceIds.push(resources[i].id);
+      }
+
+      _this.$ajax.post(process.env.VUE_APP_SERVER + '/system/admin/role/save-resource', {
+        id: _this.role.id,
+        resourceIds: resourceIds
+      }).then((response)=>{
+        let resp = response.data;
+        if (resp.success) {
+          Toast.success("saved");
+        } else {
+          Toast.warning(resp.message);
+        }
+      });
+    },
   },
 };
 </script>
