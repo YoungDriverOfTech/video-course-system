@@ -12,6 +12,7 @@ import Teacher from './view/admin/teacher.vue'
 import File from './view/admin/file.vue'
 import User from './view/admin/user.vue'
 import Resource from './view/admin/resource.vue'
+import Role from './view/admin/role.vue'
 
 Vue.use(Router)
 
@@ -88,6 +89,11 @@ export default new Router({
                     path: 'system/resource',
                     name: 'system/resource',
                     component: Resource
+                },
+                {
+                    path: 'system/role',
+                    name: 'system/role',
+                    component: Role
                 },
             ]
         }

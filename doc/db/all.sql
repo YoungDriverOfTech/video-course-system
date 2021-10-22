@@ -213,7 +213,7 @@ create table `resource` (
   `request` varchar(200) null comment 'request|interface',
   `parent` char(6) comment 'parent id',
   primary key (`id`)
-) engine=innodb default charset=utf8 comment='resource';
+) engine=innodb default charset=utf8mb4 comment='resource';
 
 insert into `resource` values ('01', '系统管理', null, null, null);
 insert into `resource` values ('0101', '用户管理', '/system/user', null, '01');
@@ -224,6 +224,20 @@ insert into `resource` values ('0102', '资源管理', '/system/resource', null,
 insert into `resource` values ('010201', '保存/显示', null, '["/system/admin/resource"]', '0102');
 insert into `resource` values ('0103', '角色管理', '/system/role', null, '01');
 insert into `resource` values ('010301', '角色/权限管理', null, '["/system/admin/role"]', '0103');
+
+
+-- role
+drop table if exists `role`;
+create table `role` (
+  `id` char(8) not null default '' comment 'id',
+  `name` varchar(50) not null comment 'character',
+  `desc` varchar(100) not null comment 'description',
+  primary key (`id`)
+) engine=innodb default charset=utf8mb4 comment='character';
+
+insert into `role` values ('00000000', '系统管理员', '管理用户、角色权限');
+insert into `role` values ('00000001', '开发', '维护资源');
+insert into `role` values ('00000002', '业务管理员', '负责业务管理');
 
 
 -----for test======
