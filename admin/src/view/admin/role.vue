@@ -21,7 +21,7 @@
     <table id="simple-table" class="table table-bordered table-hover">
       <thead>
         <tr>
-                  <th>id</th>
+          <th>id</th>
           <th>character</th>
           <th>description</th>
           <th>操作</th>
@@ -35,6 +35,9 @@
             <td>{{role.desc}}</td>
           <td>
             <div class="hidden-sm hidden-xs btn-group">
+              <button v-on:click="editResource(role)" class="btn btn-xs btn-info">
+                <i class="ace-icon fa fa-list bigger-120"></i>
+              </button>
               <button v-on:click="edit(role)" class="btn btn-xs btn-info">
                 <i class="ace-icon fa fa-pencil bigger-120"></i>
               </button>
@@ -96,6 +99,31 @@
       <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
+
+    <!-- role resource relationship -->
+    <div id="resource-modal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Role And Resource</h4>
+          </div>
+          <div class="modal-body">
+            <ul id="tree" class="ztree"></ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-white btn-default btn-round" data-dismiss="modal">
+              <i class="ace-icon fa fa-times"></i>
+              close
+            </button>
+            <button type="button" class="btn btn-white btn-info btn-round" v-on:click="saveResource()">
+              <i class="ace-icon fa fa-plus blue"></i>
+              save
+            </button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
   </div>
 </template>
 
@@ -108,6 +136,8 @@ export default {
     return {
       roles: [],
       role: {},
+      resources: [],
+      zTree: {},
     };
   },
   mounted: function () {
@@ -194,6 +224,44 @@ export default {
           });
         Toast.success("deleted");
       });
+    },
+
+    editResource(role) {
+      let _this = this;
+      _this.role = $.extend({}, role);
+      _this.loadResource();
+      $("#resource-modal").modal("show");
+    },
+
+    loadResource() {
+      let _this = this;
+      Loading.show();
+      _this.$ajax.get(process.env.VUE_APP_SERVER + '/system/admin/resource/load-tree').then((res)=>{
+        Loading.hide();
+        let response = res.data;
+        _this.resources = response.content;
+        _this.initTree();
+      })
+    },
+
+    initTree() {
+      let _this = this;
+      let setting = {
+        check: {
+          enable: true
+        },
+        data: {
+          simpleData: {
+            idKey: "id",
+            pIdKey: "parent",
+            rootPId: "",
+            enable: true
+          }
+        }
+      };
+
+      _this.zTree = $.fn.zTree.init($("#tree"), setting, _this.resources);
+      _this.zTree.expandAll(true);
     },
   },
 };
