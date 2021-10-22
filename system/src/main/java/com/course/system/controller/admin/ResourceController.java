@@ -31,19 +31,12 @@ public class ResourceController {
     }
 
     @PostMapping("/save")
-    public ResponseDto<ResourceDto> save(@RequestBody ResourceDto resourceDto) {
-        LOG.info("resourceDto: {}", resourceDto);
-
-        // check operation
-        ValidatorUtil.require(resourceDto.getName(), "name");
-        ValidatorUtil.length(resourceDto.getName(), "name", 1, 100);
-        ValidatorUtil.length(resourceDto.getPage(), "page", 1, 50);
-        ValidatorUtil.length(resourceDto.getRequest(), "request", 1, 200);
+    public ResponseDto<ResourceDto> save(@RequestBody String jsonStr) {
+        ValidatorUtil.require(jsonStr, "resource");
 
         // save operation
         ResponseDto<ResourceDto> responseDto = new ResponseDto<>();
-        resourceService.save(resourceDto);
-        responseDto.setContent(resourceDto);
+        resourceService.saveJson(jsonStr);
         return responseDto;
     }
 
