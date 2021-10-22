@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/resource")
@@ -45,6 +46,14 @@ public class ResourceController {
         LOG.info("id: {}", id);
         ResponseDto<ResourceDto> responseDto = new ResponseDto<>();
         resourceService.delete(id);
+        return responseDto;
+    }
+
+    @GetMapping("/load-tree")
+    public ResponseDto<List<ResourceDto>> loadTree() {
+        ResponseDto<List<ResourceDto>> responseDto = new ResponseDto<>();
+        List<ResourceDto> resourceDtoList = resourceService.loadTree();
+        responseDto.setContent(resourceDtoList);
         return responseDto;
     }
 }

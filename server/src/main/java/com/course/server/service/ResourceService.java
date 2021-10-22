@@ -90,4 +90,35 @@ public class ResourceService {
             }
         }
     }
+
+    public List<ResourceDto> loadTree() {
+        ResourceExample example = new ResourceExample();
+        example.setOrderByClause("id asc");
+        List<Resource> resourceList = resourceMapper.selectByExample(example);
+        List<ResourceDto> resourceDtoList = CopyUtil.copyList(resourceList, ResourceDto.class);
+        for (int i = resourceDtoList.size() - 1; i >= 0; i--) {
+            // get current node
+            ResourceDto child = resourceDtoList.get(i);
+
+            // no need to handle next one if this one have no parent node
+            if (StringUtils.isEmpty(child.getParent())) {
+                continue;
+            }
+            // search parent node
+            for (int j = i - 1; j >= 0; j--) {
+                ResourceDto parent = resourceDtoList.get(j);
+                if (child.getParent().equals(parent.getId())) {
+                    if (CollectionUtils.isEmpty(parent.getChildren())) {
+                        parent.setChildren(new ArrayList<>());
+                    }
+                    // add node to first index
+                    parent.getChildren().add(0, child);
+
+                    // find parent node then remove child node
+                    resourceDtoList.remove(child);
+                }
+            }
+        }
+        return resourceDtoList;
+    }
 }
