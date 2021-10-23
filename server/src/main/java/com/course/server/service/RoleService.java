@@ -1,13 +1,11 @@
 package com.course.server.service;
 
-import com.course.server.domain.Role;
-import com.course.server.domain.RoleExample;
-import com.course.server.domain.RoleResource;
-import com.course.server.domain.RoleResourceExample;
+import com.course.server.domain.*;
 import com.course.server.dto.PageDto;
 import com.course.server.dto.RoleDto;
 import com.course.server.mapper.RoleMapper;
 import com.course.server.mapper.RoleResourceMapper;
+import com.course.server.mapper.RoleUserMapper;
 import com.course.server.util.CopyUtil;
 import com.course.server.util.UuidUtil;
 import com.github.pagehelper.PageHelper;
@@ -28,6 +26,9 @@ public class RoleService {
 
     @Resource
     private RoleResourceMapper roleResourceMapper;
+
+    @Resource
+    private RoleUserMapper roleUserMapper;
 
     public void list(PageDto<RoleDto> pageDto) {
         // paging and select records
@@ -94,5 +95,22 @@ public class RoleService {
             resourceIdList.add(roleResource.getResourceId());
         }
         return resourceIdList;
+    }
+
+    public void saveUser(RoleDto roleDto) {
+        // deleteAll -> save
+        String roleId = roleDto.getId();
+        List<String> userIdList = roleDto.getUserIds();
+        RoleUserExample example = new RoleUserExample();
+        example.createCriteria().andRoleIdEqualTo(roleId);
+        roleUserMapper.deleteByExample(example);
+
+        for (String s : userIdList) {
+            RoleUser roleUser = new RoleUser();
+            roleUser.setId(UuidUtil.getShortUuid());
+            roleUser.setRoleId(roleId);
+            roleUser.setUserId(s);
+            roleUserMapper.insert(roleUser);
+        }
     }
 }

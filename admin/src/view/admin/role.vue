@@ -144,7 +144,7 @@
                   <tr v-for="user in users" v-bind:key="user.index">
                     <td>{{user.loginName}}</td>
                     <td class="text-right">
-                      <a href="javascript:;" class="">
+                      <a v-on:click="addUser(user)" href="javascript:;" class="">
                         <i class="ace-icon fa fa-arrow-circle-right blue"></i>
                       </a>
                     </td>
@@ -158,7 +158,7 @@
                   <tr v-for="user in roleUsers" v-bind:key="user.index">
                     <td>{{user.loginName}}</td>
                     <td class="text-right">
-                      <a href="javascript:;" class="">
+                      <a v-on:click="deleteUser(user)" href="javascript:;" class="">
                         <i class="ace-icon fa fa-trash blue"></i>
                       </a>
                     </td>
@@ -376,6 +376,44 @@ export default {
         let resp = response.data;
         if (resp.success) {
           _this.users = resp.content.list;
+        } else {
+          Toast.warning(resp.message);
+        }
+      })
+    },
+
+    addUser(user) {
+      let _this = this;
+
+      let users = _this.roleUsers;
+      for (let i = 0; i < users.length; i++) {
+        if (user === users[i]) {
+          return;
+        }
+      }
+
+      _this.roleUsers.push(user);
+    },
+
+    deleteUser(user) {
+      let _this = this;
+      Tool.removeObj(_this.roleUsers, user);
+    },
+
+    saveUser() {
+      let _this = this;
+      let users = _this.roleUsers;
+      let userIds = [];
+      for (let i = 0; i < users.length; i++) {
+        userIds.push(users[i].id);
+      }
+      _this.$ajax.post(process.env.VUE_APP_SERVER + '/system/admin/role/save-user', {
+        id: _this.role.id,
+        userIds: userIds
+      }).then((response)=>{
+        let resp = response.data;
+        if (resp.success) {
+          Toast.success("saved");
         } else {
           Toast.warning(resp.message);
         }

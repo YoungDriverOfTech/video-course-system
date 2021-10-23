@@ -22,6 +22,8 @@ public class RoleDto {
 
     private List<String> resourceIds;
 
+    private List<String> userIds;
+
     public String getId() {
         return id;
     }
@@ -54,6 +56,14 @@ public class RoleDto {
         this.resourceIds = resourceIds;
     }
 
+    public List<String> getUserIds() {
+        return userIds;
+    }
+
+    public void setUserIds(List<String> userIds) {
+        this.userIds = userIds;
+    }
+
     @Override
     public String toString() {
         return "RoleDto{" +
@@ -61,6 +71,7 @@ public class RoleDto {
                 ", name='" + name + '\'' +
                 ", desc='" + desc + '\'' +
                 ", resourceIds=" + resourceIds +
+                ", userIds=" + userIds +
                 '}';
     }
 }
