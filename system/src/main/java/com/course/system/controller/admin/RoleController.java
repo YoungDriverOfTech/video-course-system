@@ -79,4 +79,12 @@ public class RoleController {
         responseDto.setContent(roleDto);
         return responseDto;
     }
+
+    @GetMapping("/list-user/{roleId}")
+    public ResponseDto<List<String>> listUser(@PathVariable String roleId) {
+        ResponseDto<List<String>> responseDto = new ResponseDto<>();
+        List<String> userIdList = roleService.listUser(roleId);
+        responseDto.setContent(userIdList);
+        return responseDto;
+    }
 }

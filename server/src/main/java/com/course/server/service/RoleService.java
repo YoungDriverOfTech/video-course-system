@@ -113,4 +113,15 @@ public class RoleService {
             roleUserMapper.insert(roleUser);
         }
     }
+
+    public List<String> listUser(String roleId) {
+        RoleUserExample example = new RoleUserExample();
+        example.createCriteria().andRoleIdEqualTo(roleId);
+        List<RoleUser> roleUserList = roleUserMapper.selectByExample(example);
+        List<String> userIdList = new ArrayList<>();
+        for (RoleUser roleUser : roleUserList) {
+            userIdList.add(roleUser.getUserId());
+        }
+        return userIdList;
+    }
 }
