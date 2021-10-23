@@ -1,5 +1,8 @@
 package com.course.gateway.filter;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -48,6 +51,26 @@ public class LoginAdminGatewayFilter implements GatewayFilter, Ordered {
             return exchange.getResponse().setComplete();
         } else {
             LOG.info("login finished：{}", object);
+            // add role check
+            LOG.info("request url：{}", path);
+            boolean exist = false;
+            JSONObject loginUserDto = JSON.parseObject(String.valueOf(object));
+            JSONArray requests = loginUserDto.getJSONArray("requests");
+            for (Object o : requests) {
+                String request = (String) o;
+                if (path.contains(request)) {
+                    exist = true;
+                    break;
+                }
+            }
+            if (exist) {
+                LOG.info("passed");
+            } else {
+                LOG.warn("not passed");
+                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                return exchange.getResponse().setComplete();
+            }
+
             return chain.filter(exchange);
         }
     }
