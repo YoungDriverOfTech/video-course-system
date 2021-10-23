@@ -1,6 +1,9 @@
 package com.course.server.dto;
 
 
+import java.util.HashSet;
+import java.util.List;
+
 public class LoginUserDto {
 
     /**
@@ -18,6 +21,15 @@ public class LoginUserDto {
      */
     private String token;
 
+    /**
+     * all resource
+     */
+    private List<ResourceDto> resources;
+
+    /**
+     * all request url, for backend role filter
+     */
+    private HashSet<String> requests;
 
     public String getId() {
         return id;
@@ -43,12 +55,30 @@ public class LoginUserDto {
         this.token = token;
     }
 
+    public List<ResourceDto> getResources() {
+        return resources;
+    }
+
+    public void setResources(List<ResourceDto> resources) {
+        this.resources = resources;
+    }
+
+    public HashSet<String> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(HashSet<String> requests) {
+        this.requests = requests;
+    }
+
     @Override
     public String toString() {
         return "LoginUserDto{" +
                 "id='" + id + '\'' +
                 ", loginName='" + loginName + '\'' +
                 ", token='" + token + '\'' +
+                ", resources=" + resources +
+                ", requests=" + requests +
                 '}';
     }
 

@@ -1,26 +1,28 @@
 package com.course.server.service;
 
-import com.course.server.dto.LoginUserDto;
-import com.course.server.dto.UserDto;
+import com.alibaba.fastjson.JSON;
 import com.course.server.domain.User;
 import com.course.server.domain.UserExample;
+import com.course.server.dto.LoginUserDto;
 import com.course.server.dto.PageDto;
+import com.course.server.dto.ResourceDto;
+import com.course.server.dto.UserDto;
 import com.course.server.exception.BusinessException;
 import com.course.server.exception.BusinessExceptionCode;
 import com.course.server.mapper.UserMapper;
+import com.course.server.mapper.my.MyUserMapper;
 import com.course.server.util.CopyUtil;
 import com.course.server.util.UuidUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -30,6 +32,9 @@ public class UserService {
 
     @Resource
     private UserMapper userMapper;
+
+    @Resource
+    private MyUserMapper myUserMapper;
 
     public void list(PageDto<UserDto> pageDto) {
         // paging and select records
@@ -98,12 +103,33 @@ public class UserService {
             throw new BusinessException(BusinessExceptionCode.LOGIN_ERROR);
         } else {
             if (user.getPassword().equals(userDto.getPassword())) {
-                // 登录成功
-                return CopyUtil.copy(user, LoginUserDto.class);
+                // login success
+                LoginUserDto loginUserDto = CopyUtil.copy(user, LoginUserDto.class);
+                // read this user's role
+                setAuth(loginUserDto);
+                return loginUserDto;
             } else {
                 LOG.info("password wrong, input：{}, db：{}", userDto.getPassword(), user.getPassword());
                 throw new BusinessException(BusinessExceptionCode.LOGIN_ERROR);
             }
         }
+    }
+
+    private void setAuth(LoginUserDto loginUserDto) {
+        List<ResourceDto> resourceDtoList = myUserMapper.findResources(loginUserDto.getId());
+        loginUserDto.setResources(resourceDtoList);
+
+        // role filter
+        HashSet<String> requestSet = new HashSet<>();
+        if (!CollectionUtils.isEmpty(resourceDtoList)) {
+            for (ResourceDto resourceDto : resourceDtoList) {
+                String arrayString = resourceDto.getRequest();
+                List<String> requestList = JSON.parseArray(arrayString, String.class);
+                if (!CollectionUtils.isEmpty(requestList)) {
+                    requestSet.addAll(requestList);
+                }
+            }
+        }
+        loginUserDto.setRequests(requestSet);
     }
 }
