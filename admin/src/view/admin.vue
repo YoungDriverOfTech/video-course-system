@@ -599,7 +599,7 @@ export default {
 
   watch: {
     $route: {
-      handler: function () {
+      handler: function (val) {
         let _this = this;
 
         if (!_this.hasResourceRouter(val.name)) {
@@ -618,7 +618,7 @@ export default {
   methods: {
 
     hasResourceRouter(router) {
-      let _this = this;
+      // let _this = this;
       let resources = Tool.getLoginUser().resources;
       if (Tool.isEmpty(resources)) {
         return false;
@@ -630,7 +630,7 @@ export default {
       }
       return false;
     },
-    
+
     hasResource(id) {
       return Tool.hasResource(id);
     },

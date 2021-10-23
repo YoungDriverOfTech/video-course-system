@@ -153,6 +153,7 @@ export default {
                 LocalStorage.set(LOCAL_KEY_REMEMBER_USER, null);
               }
               _this.$router.push("/welcome")
+              console.log('122222222222222222222')
             } else {
               Toast.warning(resp.message);
               _this.user.password = '';

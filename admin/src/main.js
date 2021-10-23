@@ -18,11 +18,11 @@ axios.interceptors.request.use(function (config) {
   if (Tool.isNotEmpty(token)) {
     config.headers.token = token;
   }
-  console.log("request:", config);
+  // console.log("request:", config);
   return config;
 }, error => { console.log(error) });
 axios.interceptors.response.use(function (response) {
-  console.log("response:", response);
+  // console.log("response:", response);
   return response;
 }, error => { console.log(error) });
 
